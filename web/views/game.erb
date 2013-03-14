@@ -1,0 +1,51 @@
+<html>
+	<head>		
+		<title>Box Score Replay - <%= @game.away_team %> @ <%= @game.home_team %>, <%= @game.date.strftime("%D") %></title>
+		<script type="text/javascript">
+			var data = <%= @game_data %>;
+		</script>
+		<script type="text/javascript" src="/jquery.js"></script>
+		<script type="text/javascript" src="/jquery-ui.js"></script>
+		<script type="text/javascript" src="/main.js"></script>
+
+		<script type="text/javascript" src="//use.typekit.net/waz4ava.js"></script>
+		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+		<link rel="stylesheet" href="/styles.css" />
+	</head>
+	<body>
+
+		<section>
+
+			<div id="slider"></div>
+
+			<p class="align-right">Box score at: <span id="time">1Q 12:00</span></p>
+			<table id="stats">
+				<thead>
+					<tr>
+						<th class="align-left"></th>
+						<th class="value-col">PTS</th>
+						<th class="value-col">OR</th>
+						<th class="value-col">DR</th>
+						<th class="value-col">REB</th>
+						<th class="value-col">AST</th>
+						<th class="value-col">STL</th>
+						<th class="value-col">BLK</th>
+						<th class="value-col">TO</th>
+						<th class="value-col align-right">FG</th>
+						<th class="value-col align-right">3FG</th>
+						<th class="value-col align-right">FT</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+
+			<p class="half-width float-left"><a href="/">Box Score Replay</a></p>
+			<p class="half-width float-left align-right">View full stats at <a href="http://www.basketball-reference.com/boxscores/<%= @game.bbref_key %>.html">Basketball-Reference</a>.</p>
+
+		</section>
+
+	</body>
+</html>

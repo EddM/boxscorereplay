@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<title>Box Score Replay</title>
+		<script type="text/javascript" src="//use.typekit.net/waz4ava.js"></script>
+		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+		<link rel="stylesheet" href="/styles.css" />
+	</head>
+	<body>
+
+		<section>
+
+			<table>
+			<% @games.each do |game| %>
+				<tr>
+					<td><a href="/<%= game.slug %>"><%= game.away_team %> @ <%= game.home_team %></td>
+					<td><%= game.date.strftime("%D") %></td>
+				</tr>
+			<% end %>
+			</table>
+
+		</section>
+
+	</body>
+</html>
