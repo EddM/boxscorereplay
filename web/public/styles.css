@@ -22,11 +22,16 @@ a:visited { color: #8B5F37; }
 .half-width { width: 50%; }
 .float-left { float: left; }
 
+.clear { clear: both; }
+
 h1, h2, h3 {
 	text-rendering: optimizeLegibility;
 	line-height: 1;
 	margin-top: 0;
+	margin-bottom: 1em;
 }
+
+p { margin-bottom: 1em; }
 
 section {
 	width: 650px;
@@ -45,6 +50,8 @@ table th.value-col { width: 7%; }
 .align-left { text-align: left; }
 .align-center { text-align: center; }
 .align-right { text-align: right; }
+
+.smaller { font-size: 0.8em; }
 
 /* jQuery UI ----------------------------------*/
 

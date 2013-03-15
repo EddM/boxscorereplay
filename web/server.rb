@@ -15,8 +15,13 @@ get '/' do
 	erb :index
 end
 
+get '/about' do
+	erb :about
+end
+
 get '/:id' do
 	@game = Game.first(:slug => params[:id])
 	@game_data = @game.to_json
 	erb :game
 end
+
