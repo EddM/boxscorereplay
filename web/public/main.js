@@ -1,5 +1,5 @@
 (function() {
-  var Player, data, fetch_game, stats_to_time, update_table;
+  var Player, data, fetch_game, stats_to_time;
 
   Player = (function() {
 
@@ -37,6 +37,10 @@
 
     Player.prototype.ft = function() {
       return "" + this.ftm + "/" + this.fta;
+    };
+
+    Player.prototype.points = function() {
+      return (this.fgm3 * 3) + (this.fgm2 * 2) + (this.ftm * 1);
     };
 
     Player.prototype.fgpc = function() {
@@ -163,7 +167,7 @@
     return teams;
   };
 
-  update_table = function(time) {
+  window.update_table = function(time) {
     var stats, tbody, team_i;
     team_i = 0;
     tbody = $("table#stats tbody").html("");
@@ -176,7 +180,7 @@
         fgpc = player.fgpc();
         tr = $("<tr class=\"player\"></tr>");
         tr.append("<td>" + player.name + "</td>");
-        tr.append("<td class=\"numeric\">" + player.pts + "</td>");
+        tr.append("<td class=\"numeric\">" + (player.points()) + "</td>");
         tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
         tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
         tr.append("<td class=\"numeric\">" + (player.reb()) + "</td>");

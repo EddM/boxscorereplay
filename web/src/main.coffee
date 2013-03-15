@@ -6,7 +6,7 @@ class Player
 	fg: -> "#{@fgm2 + @fgm3}/#{@fga2 + @fga3}"
 	fg3: -> "#{@fgm3}/#{@fga3}"
 	ft: -> "#{@ftm}/#{@fta}"
-
+	points: -> (@fgm3 * 3) + (@fgm2 * 2) + (@ftm * 1)
 	fgpc: -> @pct((@fgm2 + @fgm3) / (@fga2 + @fga3))
 	fg3pc: -> @pct(@fgm3 / @fga3)
 	ftpc: -> @pct(@ftm / @fta)
@@ -55,7 +55,7 @@ stats_to_time = (time, data) ->
 				player.pts += 1
 	teams
 
-update_table = (time) ->
+window.update_table = (time) ->
 	team_i = 0
 	tbody = $("table#stats tbody").html("")
 	stats = stats_to_time(time, window.data)
@@ -72,7 +72,7 @@ update_table = (time) ->
 
 			tr = $("<tr class=\"player\"></tr>")
 			tr.append "<td>#{player.name}</td>"
-			tr.append "<td class=\"numeric\">#{player.pts}</td>"
+			tr.append "<td class=\"numeric\">#{player.points()}</td>"
 			tr.append "<td class=\"numeric misc\">#{player.oreb}</td>"
 			tr.append "<td class=\"numeric misc\">#{player.dreb}</td>"
 			tr.append "<td class=\"numeric\">#{player.reb()}</td>"
