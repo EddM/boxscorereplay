@@ -17,7 +17,7 @@ body {
 }
 
 a { color: #B64E06; }
-a:visited { color: #8B5F37; }
+a:hover, a:visited { color: #8B5F37; }
 
 .half-width { width: 50%; }
 .float-left { float: left; }
