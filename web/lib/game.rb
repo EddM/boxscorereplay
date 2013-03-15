@@ -162,9 +162,6 @@ class Game
 
 	def timestamp_to_integer(timestamp, period)
 		mins, seconds = timestamp.split(".")[0].split(":").collect { |t| t.to_i }
-		puts "*****"
-		puts mins
-		puts seconds
 		((11 - mins) * 60) + (60 - seconds) + ((period - 1) * 720)
 	end
 
