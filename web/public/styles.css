@@ -53,6 +53,16 @@ table th.value-col { width: 7%; }
 
 .smaller { font-size: 0.8em; }
 
+tr.team td span {
+	margin-left: 1em;
+	padding: 4px;
+	background: #DEDEDE;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	color: #aaa;
+	font-size: 0.8em;
+}
+
 /* jQuery UI ----------------------------------*/
 
 .ui-helper-hidden {

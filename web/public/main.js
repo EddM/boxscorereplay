@@ -1,5 +1,5 @@
 (function() {
-  var Player, data, fetch_game, stats_to_time;
+  var Player, data, stats_to_time;
 
   Player = (function() {
 
@@ -168,15 +168,17 @@
   };
 
   window.update_table = function(time) {
-    var stats, tbody, team_i;
+    var stats, tbody, team_i, team_scores;
     team_i = 0;
+    team_scores = [];
     tbody = $("table#stats tbody").html("");
     stats = stats_to_time(time, window.data);
-    return stats.forEach(function(team) {
-      tbody.append("<tr class=\"team\"><td colspan=\"11\">" + window.data.teams[team_i] + "</td></tr>");
-      team_i++;
-      return team.sort(sort_by_name).forEach(function(player) {
+    stats.forEach(function(team) {
+      team_scores[team_i] = 0;
+      tbody.append("<tr class=\"team\"><td colspan=\"11\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
+      team.sort(sort_by_name).forEach(function(player) {
         var fgpc, tr;
+        team_scores[team_i] += player.points();
         fgpc = player.fgpc();
         tr = $("<tr class=\"player\"></tr>");
         tr.append("<td>" + player.name + "</td>");
@@ -193,16 +195,10 @@
         tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + (player.ft()) + "</span></td>");
         return tbody.append(tr);
       });
+      return team_i++;
     });
-  };
-
-  fetch_game = function(id) {
-    return $.ajax("/game/" + id + ".json", {
-      complete: function(jqxhr) {
-        data = jQuery.parseJSON(jqxhr.responseText);
-        return update_table(600);
-      }
-    });
+    $("#score-0").html(team_scores[0]);
+    return $("#score-1").html(team_scores[1]);
   };
 
   $(function() {

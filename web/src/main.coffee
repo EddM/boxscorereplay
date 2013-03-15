@@ -57,19 +57,15 @@ stats_to_time = (time, data) ->
 
 window.update_table = (time) ->
 	team_i = 0
+	team_scores = []
 	tbody = $("table#stats tbody").html("")
 	stats = stats_to_time(time, window.data)
 	stats.forEach (team) ->
-		tbody.append "<tr class=\"team\"><td colspan=\"11\">#{window.data.teams[team_i]}</td></tr>"
-		team_i++
+		team_scores[team_i] = 0
+		tbody.append "<tr class=\"team\"><td colspan=\"11\">#{window.data.teams[team_i]} <span id=\"score-#{team_i}\">&nbsp;</span></td></tr>"
 		team.sort(sort_by_name).forEach (player) ->
-
+			team_scores[team_i] += player.points()
 			fgpc = player.fgpc()
-			# fgpc_color = "normal"
-			# fgpc_color = "good" if fgpc >= 0.5
-			# fgpc_color = "great" if fgpc >= 0.55
-			# fgpc_color = "awesome" if fgpc >= 0.6
-
 			tr = $("<tr class=\"player\"></tr>")
 			tr.append "<td>#{player.name}</td>"
 			tr.append "<td class=\"numeric\">#{player.points()}</td>"
@@ -84,12 +80,15 @@ window.update_table = (time) ->
 			tr.append "<td class=\"fraction\"><span title=\"#{player.fg3pc()}\">#{player.fg3()}</span></td>"
 			tr.append "<td class=\"fraction\"><span title=\"#{player.ftpc()}\">#{player.ft()}</span></td>"
 			tbody.append tr
+		team_i++
+	$("#score-0").html(team_scores[0])
+	$("#score-1").html(team_scores[1])
 
-fetch_game = (id) ->
-	$.ajax "/game/#{id}.json",
-		complete: (jqxhr) -> 
-			data = jQuery.parseJSON(jqxhr.responseText)
-			update_table 600
+# fetch_game = (id) ->
+# 	$.ajax "/game/#{id}.json",
+# 		complete: (jqxhr) -> 
+# 			data = jQuery.parseJSON(jqxhr.responseText)
+# 			update_table 600
 
 $ ->
 
