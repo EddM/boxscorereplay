@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 2.hours do
+every 1.hour do
 	rake "run"
 end

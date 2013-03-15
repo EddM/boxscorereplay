@@ -25,7 +25,7 @@ class ParseTask
 		sleep(2)
 		parse_doc(doc)
 
-		yesterday = Time.now - 86400 - 86400
+		yesterday = Time.now - 86400 #- 86400
 		url = "http://www.basketball-reference.com/boxscores/index.cgi?month=#{yesterday.month}&day=#{yesterday.day}&year=#{yesterday.year}"
 		puts "Fetching #{url}"
 		doc = Nokogiri::HTML open(url)
