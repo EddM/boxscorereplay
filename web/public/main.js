@@ -27,18 +27,6 @@
       return this.oreb + this.dreb;
     };
 
-    Player.prototype.fg = function() {
-      return "" + (this.fgm2 + this.fgm3) + "/" + (this.fga2 + this.fga3);
-    };
-
-    Player.prototype.fg3 = function() {
-      return "" + this.fgm3 + "/" + this.fga3;
-    };
-
-    Player.prototype.ft = function() {
-      return "" + this.ftm + "/" + this.fta;
-    };
-
     Player.prototype.points = function() {
       return (this.fgm3 * 3) + (this.fgm2 * 2) + (this.ftm * 1);
     };
@@ -190,9 +178,9 @@
         tr.append("<td class=\"numeric\">" + player.stl + "</td>");
         tr.append("<td class=\"numeric\">" + player.blk + "</td>");
         tr.append("<td class=\"numeric\">" + player.to + "</td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + fgpc + "\">" + (player.fg()) + "</span></td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + (player.fg3()) + "</span></td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + (player.ft()) + "</span></td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + fgpc + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
         return tbody.append(tr);
       });
       return team_i++;

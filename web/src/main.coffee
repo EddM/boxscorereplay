@@ -3,9 +3,6 @@ class Player
 		@pts = @oreb = @dreb = @ast = @blk = @stl = @pf = @to = @fga2 = @fgm2 = @fga3 = @fgm3 = @fta = @ftm = 0
 
 	reb: -> @oreb + @dreb
-	fg: -> "#{@fgm2 + @fgm3}/#{@fga2 + @fga3}"
-	fg3: -> "#{@fgm3}/#{@fga3}"
-	ft: -> "#{@ftm}/#{@fta}"
 	points: -> (@fgm3 * 3) + (@fgm2 * 2) + (@ftm * 1)
 	fgpc: -> @pct((@fgm2 + @fgm3) / (@fga2 + @fga3))
 	fg3pc: -> @pct(@fgm3 / @fga3)
@@ -19,8 +16,7 @@ class Player
 
 data = null
 
-window.sort_by_name = (a, b) -> 
-	if a.name.substr(2) > b.name.substr(2) then 1 else -1
+window.sort_by_name = (a, b) -> if a.name.substr(2) > b.name.substr(2) then 1 else -1
 
 stats_to_time = (time, data) ->
 	teams = ((new Player(player.id, player.name) for player in team) for team in data.players) #TODO: make more readable
@@ -76,9 +72,9 @@ window.update_table = (time) ->
 			tr.append "<td class=\"numeric\">#{player.stl}</td>"
 			tr.append "<td class=\"numeric\">#{player.blk}</td>"
 			tr.append "<td class=\"numeric\">#{player.to}</td>"
-			tr.append "<td class=\"fraction\"><span title=\"#{fgpc}\">#{player.fg()}</span></td>"
-			tr.append "<td class=\"fraction\"><span title=\"#{player.fg3pc()}\">#{player.fg3()}</span></td>"
-			tr.append "<td class=\"fraction\"><span title=\"#{player.ftpc()}\">#{player.ft()}</span></td>"
+			tr.append "<td class=\"fraction\"><span title=\"#{fgpc}\">#{player.fgm2 + player.fgm3}/#{player.fga2 + player.fga3}</span></td>"
+			tr.append "<td class=\"fraction\"><span title=\"#{player.fg3pc()}\">#{player.fgm3}/#{player.fga3}</span></td>"
+			tr.append "<td class=\"fraction\"><span title=\"#{player.ftpc()}\">#{player.ftm}/#{player.fta}</span></td>"
 			tbody.append tr
 		team_i++
 	$("#score-0").html(team_scores[0])
