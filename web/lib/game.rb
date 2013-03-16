@@ -68,6 +68,7 @@ class Game
 		when /misses 3-pt shot/i
 			fga(timestamp, cell, team, false, 3)
 		when /makes free throw/i
+			fta(timestamp, cell, team, true)
 		when /makes technical free throw/i
 			fta(timestamp, cell, team, true)
 		when /misses free throw/i
