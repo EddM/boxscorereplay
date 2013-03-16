@@ -210,6 +210,7 @@
       if (seconds === 0) {
         quarter = 1;
         minutes_remaining_in_quarter = 12;
+        seconds_remaining_in_quarter = 0;
       } else {
         quarter = Math.ceil(seconds / 720);
         seconds_remaining_in_quarter = 720 - (seconds - ((quarter - 1) * 720));
