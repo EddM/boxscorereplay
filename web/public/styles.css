@@ -190,7 +190,8 @@ tr.team td span {
 	height: .4em;
 	margin-bottom: 1em;
 	/*background: #ccc;*/
-	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKcAAAABCAMAAACMjU4tAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFzMzMtbW1Mh8SYQAAABFJREFUeNpiYBj0gBEEAAIMAAC3AAZ3owmyAAAAAElFTkSuQmCC');
+	/*background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKcAAAABCAMAAACMjU4tAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFzMzMtbW1Mh8SYQAAABFJREFUeNpiYBj0gBEEAAIMAAC3AAZ3owmyAAAAAElFTkSuQmCC');*/
+	background-image: url('/marker.png');
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 }
