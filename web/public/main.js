@@ -198,7 +198,19 @@
       return team_i++;
     });
     $("#score-0").html(team_scores[0]);
-    return $("#score-1").html(team_scores[1]);
+    $("#score-1").html(team_scores[1]);
+    return $("span[title]").each(function() {
+      $(this).data('title', $(this).attr('title'));
+      $(this).attr('title', '');
+      $(this).mouseover(function() {
+        var tooltip;
+        tooltip = $("<span class=\"tooltip\">" + ($(this).data('title')) + "</span>");
+        return $(this).after(tooltip);
+      });
+      return $(this).mouseout(function() {
+        return $(".tooltip").remove();
+      });
+    });
   };
 
   $(function() {

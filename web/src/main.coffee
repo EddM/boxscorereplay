@@ -83,12 +83,13 @@ window.update_table = (time) ->
 		team_i++
 	$("#score-0").html(team_scores[0])
 	$("#score-1").html(team_scores[1])
-
-# fetch_game = (id) ->
-# 	$.ajax "/game/#{id}.json",
-# 		complete: (jqxhr) -> 
-# 			data = jQuery.parseJSON(jqxhr.responseText)
-# 			update_table 600
+	$("span[title]").each ->
+		$(this).data 'title', $(this).attr('title')
+		$(this).attr 'title', ''
+		$(this).mouseover ->
+			tooltip = $("<span class=\"tooltip\">#{$(this).data('title')}</span>")
+			$(this).after tooltip
+		$(this).mouseout -> $(".tooltip").remove()
 
 $ ->
 

@@ -38,7 +38,7 @@ section {
 	margin: 3em auto;
 }
 
-table { width: 100%; margin-bottom: 2em; }
+table { width: 100%; margin-bottom: 2em; cursor: default; }
 table#stats tr.team td { font-weight: bold; padding-top: 10px; }
 table#stats tbody tr.player td.misc { color: #999999; }
 table#stats tbody tr.player:hover { background: #ddd; }
@@ -61,6 +61,17 @@ tr.team td span {
 	border-radius: 6px;
 	color: #999;
 	font-size: 0.8em;
+}
+
+.tooltip {
+	position: absolute;
+	padding: 3px 6px;
+	font-size: 12px;
+	background: rgba(0, 0, 0, 0.75);
+	color: white;
+	margin-left: 5px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 
 /* jQuery UI ----------------------------------*/
