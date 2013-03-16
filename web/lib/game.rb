@@ -120,8 +120,13 @@ class Game
 
 	def foul(timestamp, cell, team)
 		return if cell.text =~ /technical/i
-		player = player_by_element(cell.css('a:first-of-type'), team == 1 ? 0 : 1)
-		@events << FlatEvent.new(player, :foul, timestamp)
+		if cell.text =~ /offensive foul by/i
+			player = player_by_element(cell.css('a:first-of-type'), team)
+			@events << FlatEvent.new(player, :foul, timestamp)
+		else
+			player = player_by_element(cell.css('a:first-of-type'), team == 1 ? 0 : 1)
+			@events << FlatEvent.new(player, :foul, timestamp)
+		end
 	end
 
 	def to(timestamp, cell, team)
