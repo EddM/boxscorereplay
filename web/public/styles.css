@@ -52,6 +52,7 @@ table th.value-col { width: 7%; }
 .align-right { text-align: right; }
 
 .smaller { font-size: 0.8em; }
+.lighter { color: #666; }
 
 tr.team td span {
 	margin-left: 1em;
@@ -73,6 +74,8 @@ tr.team td span {
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
+
+#time { margin-left: 1em; }
 
 /* jQuery UI ----------------------------------*/
 
@@ -185,7 +188,8 @@ tr.team td span {
 .ui-slider-horizontal {
 	height: .4em;
 	margin-bottom: 1em;
-	background: #ccc;
+	/*background: #ccc;*/
+	background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKcAAAABCAMAAACMjU4tAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAZQTFRFzMzMtbW1Mh8SYQAAABFJREFUeNpiYBj0gBEEAAIMAAC3AAZ3owmyAAAAAElFTkSuQmCC');
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 }
