@@ -163,13 +163,13 @@
     stats = stats_to_time(time, window.data);
     stats.forEach(function(team) {
       team_scores[team_i] = 0;
-      tbody.append("<tr class=\"team\"><td colspan=\"11\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
+      tbody.append("<tr class=\"team\"><td colspan=\"13\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
       team.sort(sort_by_name).forEach(function(player) {
         var fgpc, tr;
         team_scores[team_i] += player.points();
         fgpc = player.fgpc();
         tr = $("<tr class=\"player\"></tr>");
-        tr.append("<td>" + player.name + "</td>");
+        tr.append("<td class=\"string\">" + player.name + "</td>");
         tr.append("<td class=\"numeric\">" + (player.points()) + "</td>");
         tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
         tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
@@ -177,6 +177,7 @@
         tr.append("<td class=\"numeric\">" + player.ast + "</td>");
         tr.append("<td class=\"numeric\">" + player.stl + "</td>");
         tr.append("<td class=\"numeric\">" + player.blk + "</td>");
+        tr.append("<td class=\"numeric\">" + player.pf + "</td>");
         tr.append("<td class=\"numeric\">" + player.to + "</td>");
         tr.append("<td class=\"fraction\"><span title=\"" + fgpc + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
         tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");

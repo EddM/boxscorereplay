@@ -34,18 +34,19 @@ h1, h2, h3 {
 p { margin-bottom: 1em; }
 
 section {
-	width: 650px;
+	width: 700px;
 	margin: 3em auto;
 }
 
 table { width: 100%; margin-bottom: 2em; cursor: default; }
-table#stats tr.team td { font-weight: bold; padding-top: 10px; }
+table#stats tr.team td { font-weight: bold; padding: 5px 0; }
 table#stats tbody tr.player td.misc { color: #999999; }
 table#stats tbody tr.player:hover { background: #ddd; }
-table td.numeric { text-align: center; }
-table td.fraction { text-align: right; }
+table td.string { width: 150px !important; }
+table td.numeric { text-align: center; width: 40px !important; }
+table td.fraction { text-align: right; width: 60px !important; }
 
-table th.value-col { width: 7%; }
+/*table th.value-col { width: 7%; }*/
 
 .align-left { text-align: left; }
 .align-center { text-align: center; }
@@ -57,7 +58,7 @@ table th.value-col { width: 7%; }
 tr.team td span {
 	margin-left: 1em;
 	padding: 4px;
-	background: #DEDEDE;
+	/*background: #DEDEDE;*/
 	-webkit-border-radius: 6px;
 	border-radius: 6px;
 	color: #999;
