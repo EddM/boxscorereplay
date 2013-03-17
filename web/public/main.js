@@ -1,5 +1,17 @@
 (function() {
-  var Player, data, stats_to_time;
+  var Player, data, formatted_pct, shooting_stats_cell, stats_to_time, update_team_stats;
+
+  formatted_pct = function(value) {
+    if (isNaN(value)) {
+      return ".000";
+    } else {
+      if (value >= 1) {
+        return "1.000";
+      } else {
+        return value.toFixed(3).substr(1);
+      }
+    }
+  };
 
   Player = (function() {
 
@@ -32,27 +44,15 @@
     };
 
     Player.prototype.fgpc = function() {
-      return this.pct((this.fgm2 + this.fgm3) / (this.fga2 + this.fga3));
+      return formatted_pct((this.fgm2 + this.fgm3) / (this.fga2 + this.fga3));
     };
 
     Player.prototype.fg3pc = function() {
-      return this.pct(this.fgm3 / this.fga3);
+      return formatted_pct(this.fgm3 / this.fga3);
     };
 
     Player.prototype.ftpc = function() {
-      return this.pct(this.ftm / this.fta);
-    };
-
-    Player.prototype.pct = function(value) {
-      if (isNaN(value)) {
-        return ".000";
-      } else {
-        if (value >= 1) {
-          return "1.000";
-        } else {
-          return value.toFixed(3).substr(1);
-        }
-      }
+      return formatted_pct(this.ftm / this.fta);
     };
 
     return Player;
@@ -155,39 +155,85 @@
     return teams;
   };
 
+  shooting_stats_cell = function(made, attempts) {
+    return $("<td class=\"fraction\"><span title=\"" + (formatted_pct(made / attempts)) + "\">" + made + "/" + attempts + "</span></td>");
+  };
+
+  update_team_stats = function(team_stats, player) {
+    team_stats.orebs += player.oreb;
+    team_stats.drebs += player.dreb;
+    team_stats.asts += player.ast;
+    team_stats.stls += player.stl;
+    team_stats.blks += player.blk;
+    team_stats.pfs += player.pf;
+    team_stats.tos += player.to;
+    team_stats.ftm += player.ftm;
+    team_stats.fta += player.fta;
+    team_stats.fgm += player.fgm2 + player.fgm3;
+    team_stats.fga += player.fga2 + player.fga3;
+    team_stats.fgm3 += player.fgm3;
+    return team_stats.fga3 += player.fga3;
+  };
+
   window.update_table = function(time) {
-    var stats, tbody, team_i, team_scores;
-    team_i = 0;
-    team_scores = [];
+    var stats, tbody;
     tbody = $("table#stats tbody").html("");
     stats = stats_to_time(time, window.data);
-    stats.forEach(function(team) {
-      team_scores[team_i] = 0;
-      tbody.append("<tr class=\"team\"><td colspan=\"13\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
+    stats.forEach(function(team, team_i) {
+      var key, team_stats, team_tr, _i, _len, _ref;
+      team_stats = {
+        points: 0,
+        orebs: 0,
+        drebs: 0,
+        rebs: 0,
+        asts: 0,
+        stls: 0,
+        blks: 0,
+        pfs: 0,
+        tos: 0,
+        ftm: 0,
+        fta: 0,
+        fgm: 0,
+        fga: 0,
+        fgm3: 0,
+        fga3: 0
+      };
+      tbody.append("<tr class=\"header\"><td colspan=\"13\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
       team.sort(sort_by_name).forEach(function(player) {
-        var fgpc, tr;
-        team_scores[team_i] += player.points();
-        fgpc = player.fgpc();
+        var total_points, total_rebounds, tr;
+        total_points = player.points();
+        total_rebounds = player.reb();
+        update_team_stats(team_stats, player);
+        team_stats.points += total_points;
+        team_stats.rebs += total_rebounds;
         tr = $("<tr class=\"player\"></tr>");
         tr.append("<td class=\"string\">" + player.name + "</td>");
-        tr.append("<td class=\"numeric\">" + (player.points()) + "</td>");
+        tr.append("<td class=\"numeric\">" + total_points + "</td>");
         tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
         tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
-        tr.append("<td class=\"numeric\">" + (player.reb()) + "</td>");
+        tr.append("<td class=\"numeric\">" + total_rebounds + "</td>");
         tr.append("<td class=\"numeric\">" + player.ast + "</td>");
         tr.append("<td class=\"numeric\">" + player.stl + "</td>");
         tr.append("<td class=\"numeric\">" + player.blk + "</td>");
         tr.append("<td class=\"numeric\">" + player.pf + "</td>");
         tr.append("<td class=\"numeric\">" + player.to + "</td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + fgpc + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
         tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
         tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
         return tbody.append(tr);
       });
-      return team_i++;
+      team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>");
+      _ref = ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        key = _ref[_i];
+        team_tr.append("<td class=\"numeric " + (key === 'orebs' || key === 'drebs' ? "misc" : void 0) + "\">" + team_stats[key] + "</td>");
+      }
+      team_tr.append(shooting_stats_cell(team_stats.fgm, team_stats.fga));
+      team_tr.append(shooting_stats_cell(team_stats.fgm3, team_stats.fga3));
+      team_tr.append(shooting_stats_cell(team_stats.ftm, team_stats.fta));
+      tbody.append(team_tr);
+      return $("#score-" + team_i).html(team_stats.points);
     });
-    $("#score-0").html(team_scores[0]);
-    $("#score-1").html(team_scores[1]);
     return $("span[title]").each(function() {
       $(this).data('title', $(this).attr('title'));
       $(this).attr('title', '');

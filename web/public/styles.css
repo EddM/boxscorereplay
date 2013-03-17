@@ -39,9 +39,12 @@ section {
 }
 
 table { width: 100%; margin-bottom: 2em; cursor: default; }
-table#stats tr.team td { font-weight: bold; padding: 5px 0; }
-table#stats tbody tr.player td.misc { color: #999999; }
+table#stats tr.header td { font-weight: bold; padding: 5px 0; }
+table#stats tbody tr td.misc { color: #999999; }
 table#stats tbody tr.player:hover { background: #ddd; }
+table#stats tbody tr.team td { padding-bottom: 5px; opacity: 0.33; }
+table#stats tbody tr.team:hover td { opacity: 1; }
+
 table td.string { width: 150px !important; }
 table td.numeric { text-align: center; width: 40px !important; }
 table td.fraction { text-align: right; width: 50px !important; }
@@ -55,7 +58,7 @@ table td.fraction { text-align: right; width: 50px !important; }
 .smaller { font-size: 0.8em; }
 .lighter { color: #666; }
 
-tr.team td span {
+tr.header td span {
 	margin-left: 1em;
 	padding: 4px;
 	/*background: #DEDEDE;*/
