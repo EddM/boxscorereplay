@@ -19,9 +19,10 @@ body {
 a { color: #B64E06; }
 a:hover, a:visited { color: #8B5F37; }
 
-.half-width { width: 50%; }
+.w50pc, .half-width { width: 50%; }
+.w40pc { width: 40%; }
+.float-right { float: right; }
 .float-left { float: left; }
-
 .clear { clear: both; }
 
 h1, h2, h3 {
