@@ -33,6 +33,7 @@
       this.fta = fta;
       this.ftm = ftm;
       this.pts = this.oreb = this.dreb = this.ast = this.blk = this.stl = this.pf = this.to = this.fga2 = this.fgm2 = this.fga3 = this.fgm3 = this.fta = this.ftm = 0;
+      this.appears = false;
     }
 
     Player.prototype.reb = function() {
@@ -70,7 +71,7 @@
   };
 
   stats_to_time = function(time, data) {
-    var event, player, team, teams, _i, _j, _k, _len, _len1, _len2, _player, _ref;
+    var event, filtered, player, team, teams, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _player, _ref;
     teams = (function() {
       var _i, _len, _ref, _results;
       _ref = data.players;
@@ -92,6 +93,9 @@
     _ref = data.events;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       event = _ref[_i];
+      if (event.time > time) {
+        break;
+      }
       player = null;
       for (_j = 0, _len1 = teams.length; _j < _len1; _j++) {
         team = teams[_j];
@@ -101,9 +105,6 @@
             player = _player;
           }
         }
-      }
-      if (event.time > time) {
-        break;
       }
       switch (event.type) {
         case "dreb":
@@ -150,6 +151,21 @@
           player.fta++;
           player.ftm++;
           player.pts += 1;
+      }
+      player.appears = true;
+    }
+    if (time <= 1440) {
+      for (_l = 0, _len3 = teams.length; _l < _len3; _l++) {
+        team = teams[_l];
+        for (_m = 0, _len4 = team.length; _m < _len4; _m++) {
+          player = team[_m];
+          filtered = data.events.filter(function(ev) {
+            return ev.time <= 1440 && ev.player === player.id;
+          });
+          if (filtered.length > 0) {
+            player.appears = true;
+          }
+        }
       }
     }
     return teams;
@@ -201,26 +217,28 @@
       tbody.append("<tr class=\"header\"><td colspan=\"13\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
       team.sort(sort_by_name).forEach(function(player) {
         var total_points, total_rebounds, tr;
-        total_points = player.points();
-        total_rebounds = player.reb();
-        update_team_stats(team_stats, player);
-        team_stats.points += total_points;
-        team_stats.rebs += total_rebounds;
-        tr = $("<tr class=\"player\"></tr>");
-        tr.append("<td class=\"string\">" + player.name + "</td>");
-        tr.append("<td class=\"numeric\">" + total_points + "</td>");
-        tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
-        tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
-        tr.append("<td class=\"numeric\">" + total_rebounds + "</td>");
-        tr.append("<td class=\"numeric\">" + player.ast + "</td>");
-        tr.append("<td class=\"numeric\">" + player.stl + "</td>");
-        tr.append("<td class=\"numeric\">" + player.blk + "</td>");
-        tr.append("<td class=\"numeric\">" + player.pf + "</td>");
-        tr.append("<td class=\"numeric\">" + player.to + "</td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
-        return tbody.append(tr);
+        if (player.appears) {
+          total_points = player.points();
+          total_rebounds = player.reb();
+          update_team_stats(team_stats, player);
+          team_stats.points += total_points;
+          team_stats.rebs += total_rebounds;
+          tr = $("<tr class=\"player\"></tr>");
+          tr.append("<td class=\"string\">" + player.name + "</td>");
+          tr.append("<td class=\"numeric\">" + total_points + "</td>");
+          tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
+          tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
+          tr.append("<td class=\"numeric\">" + total_rebounds + "</td>");
+          tr.append("<td class=\"numeric\">" + player.ast + "</td>");
+          tr.append("<td class=\"numeric\">" + player.stl + "</td>");
+          tr.append("<td class=\"numeric\">" + player.blk + "</td>");
+          tr.append("<td class=\"numeric\">" + player.pf + "</td>");
+          tr.append("<td class=\"numeric\">" + player.to + "</td>");
+          tr.append("<td class=\"fraction\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
+          tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
+          tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
+          return tbody.append(tr);
+        }
       });
       team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>");
       _ref = ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"];

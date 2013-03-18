@@ -7,6 +7,7 @@ formatted_pct = (value) ->
 class Player
 	constructor: (@id, @name, @pts, @oreb, @dreb, @ast, @blk, @stl, @pf, @to, @fga2, @fgm2, @fga3, @fgm3, @fta, @ftm) ->
 		@pts = @oreb = @dreb = @ast = @blk = @stl = @pf = @to = @fga2 = @fgm2 = @fga3 = @fgm3 = @fta = @ftm = 0
+		@appears = false
 
 	reb: -> @oreb + @dreb
 	points: -> (@fgm3 * 3) + (@fgm2 * 2) + (@ftm * 1)
@@ -21,11 +22,11 @@ window.sort_by_name = (a, b) -> if a.name.substr(2) > b.name.substr(2) then 1 el
 stats_to_time = (time, data) ->
 	teams = ((new Player(player.id, player.name) for player in team) for team in data.players) #TODO: make more readable
 	for event in data.events
+		break if event.time > time
 		player = null
 		for team in teams
 			for _player in team
 				player = _player if _player.id == event.player
-		break if event.time > time
 		switch event.type
 			when "dreb" then player.dreb++ 	
 			when "oreb" then player.oreb++
@@ -49,6 +50,12 @@ stats_to_time = (time, data) ->
 				player.fta++
 				player.ftm++
 				player.pts += 1
+		player.appears = true
+	if time <= 1440
+		for team in teams
+			for player in team
+				filtered = data.events.filter (ev) -> ev.time <= 1440 && ev.player == player.id
+				player.appears = true if filtered.length > 0
 	teams
 
 shooting_stats_cell = (made, attempts) -> $("<td class=\"fraction\"><span title=\"#{formatted_pct(made / attempts)}\">#{made}/#{attempts}</span></td>")
@@ -80,27 +87,28 @@ window.update_table = (time) ->
 		}
 		tbody.append "<tr class=\"header\"><td colspan=\"13\">#{window.data.teams[team_i]} <span id=\"score-#{team_i}\">&nbsp;</span></td></tr>"
 		team.sort(sort_by_name).forEach (player) ->
-			total_points = player.points()
-			total_rebounds = player.reb()
-			update_team_stats team_stats, player
-			team_stats.points += total_points
-			team_stats.rebs += total_rebounds
+			if player.appears
+				total_points = player.points()
+				total_rebounds = player.reb()
+				update_team_stats team_stats, player
+				team_stats.points += total_points
+				team_stats.rebs += total_rebounds
 
-			tr = $("<tr class=\"player\"></tr>")
-			tr.append "<td class=\"string\">#{player.name}</td>"
-			tr.append "<td class=\"numeric\">#{total_points}</td>"
-			tr.append "<td class=\"numeric misc\">#{player.oreb}</td>"
-			tr.append "<td class=\"numeric misc\">#{player.dreb}</td>"
-			tr.append "<td class=\"numeric\">#{total_rebounds}</td>"
-			tr.append "<td class=\"numeric\">#{player.ast}</td>"
-			tr.append "<td class=\"numeric\">#{player.stl}</td>"
-			tr.append "<td class=\"numeric\">#{player.blk}</td>"
-			tr.append "<td class=\"numeric\">#{player.pf}</td>"
-			tr.append "<td class=\"numeric\">#{player.to}</td>"
-			tr.append "<td class=\"fraction\"><span title=\"#{player.fgpc()}\">#{player.fgm2 + player.fgm3}/#{player.fga2 + player.fga3}</span></td>"
-			tr.append "<td class=\"fraction\"><span title=\"#{player.fg3pc()}\">#{player.fgm3}/#{player.fga3}</span></td>"
-			tr.append "<td class=\"fraction\"><span title=\"#{player.ftpc()}\">#{player.ftm}/#{player.fta}</span></td>"
-			tbody.append tr
+				tr = $("<tr class=\"player\"></tr>")
+				tr.append "<td class=\"string\">#{player.name}</td>"
+				tr.append "<td class=\"numeric\">#{total_points}</td>"
+				tr.append "<td class=\"numeric misc\">#{player.oreb}</td>"
+				tr.append "<td class=\"numeric misc\">#{player.dreb}</td>"
+				tr.append "<td class=\"numeric\">#{total_rebounds}</td>"
+				tr.append "<td class=\"numeric\">#{player.ast}</td>"
+				tr.append "<td class=\"numeric\">#{player.stl}</td>"
+				tr.append "<td class=\"numeric\">#{player.blk}</td>"
+				tr.append "<td class=\"numeric\">#{player.pf}</td>"
+				tr.append "<td class=\"numeric\">#{player.to}</td>"
+				tr.append "<td class=\"fraction\"><span title=\"#{player.fgpc()}\">#{player.fgm2 + player.fgm3}/#{player.fga2 + player.fga3}</span></td>"
+				tr.append "<td class=\"fraction\"><span title=\"#{player.fg3pc()}\">#{player.fgm3}/#{player.fga3}</span></td>"
+				tr.append "<td class=\"fraction\"><span title=\"#{player.ftpc()}\">#{player.ftm}/#{player.fta}</span></td>"
+				tbody.append tr
 
 		team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>")
 		for key in ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"]
