@@ -23,6 +23,9 @@ create_initial_list = (data) ->
 stats_to_time = (time, data) ->
   teams = [{}, {}]
 
+  if time <= 1440
+    teams[player.team][id] = new Player(id, player.name) for id, player of initial_list
+
   for event in data.events
     break if event.time > time
 
@@ -30,9 +33,8 @@ stats_to_time = (time, data) ->
       player = teams[event.team][event.player]
     else
       object = data.players[event.team][event.player]
-      obj = new Player(event.player, object.name)
-      teams[event.team][event.player] = obj
-      player = obj
+      player = new Player(event.player, object.name)
+      teams[event.team][event.player] = player
 
     switch event.type
       when "dreb" then player.dreb++  
@@ -57,10 +59,6 @@ stats_to_time = (time, data) ->
         player.fta++
         player.ftm++
         player.pts += 1
-
-  if time <= 1440
-    for id, player of initial_list
-      teams[player.team][id] = new Player(id, player.name) unless teams[0][id] || teams[1][id]
 
   teams
 

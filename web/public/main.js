@@ -81,8 +81,14 @@
   };
 
   stats_to_time = function(time, data) {
-    var event, id, obj, object, player, teams, _i, _len, _ref;
+    var event, id, object, player, teams, _i, _len, _ref;
     teams = [{}, {}];
+    if (time <= 1440) {
+      for (id in initial_list) {
+        player = initial_list[id];
+        teams[player.team][id] = new Player(id, player.name);
+      }
+    }
     _ref = data.events;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       event = _ref[_i];
@@ -93,9 +99,8 @@
         player = teams[event.team][event.player];
       } else {
         object = data.players[event.team][event.player];
-        obj = new Player(event.player, object.name);
-        teams[event.team][event.player] = obj;
-        player = obj;
+        player = new Player(event.player, object.name);
+        teams[event.team][event.player] = player;
       }
       switch (event.type) {
         case "dreb":
@@ -142,14 +147,6 @@
           player.fta++;
           player.ftm++;
           player.pts += 1;
-      }
-    }
-    if (time <= 1440) {
-      for (id in initial_list) {
-        player = initial_list[id];
-        if (!(teams[0][id] || teams[1][id])) {
-          teams[player.team][id] = new Player(id, player.name);
-        }
       }
     }
     return teams;

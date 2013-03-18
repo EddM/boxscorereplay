@@ -14,8 +14,8 @@ require './web/lib/player.rb'
 task :run do
   config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
 
-	task = ParseTask.new(config)
-	task.run
+  task = ParseTask.new(config)
+  task.run
 end
 
 namespace :db do
