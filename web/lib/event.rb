@@ -12,7 +12,6 @@ class FlatEvent
 	end
 end
 
-
 class Event
 	include DataMapper::Resource
 	
@@ -23,7 +22,5 @@ class Event
 	property :time,			Integer
 	property :name,			String
 	property :team,			Integer
-
-	# belongs_to :game
 
 end

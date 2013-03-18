@@ -1,8 +1,10 @@
 require 'sinatra'
 require 'data_mapper'
+require '../lib/config.rb'
 
+config = BSR::Config.new("#{File.dirname __FILE__}/../config/database.json")
 DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'mysql://root@localhost/boxscores')
+DataMapper.setup(:default, "mysql://#{config.user}@#{config.host}/#{config.database}")
 
 require './lib/game.rb'
 require './lib/event.rb'
