@@ -1,15 +1,14 @@
 (function() {
-  var Player, data, formatted_pct, shooting_stats_cell, stats_to_time, update_team_stats;
+  var Player, create_initial_list, formatted_pct, shooting_stats_cell, stats_to_time, update_table, update_team_stats;
 
   formatted_pct = function(value) {
     if (isNaN(value)) {
       return ".000";
+    }
+    if (value >= 1) {
+      return "1.000";
     } else {
-      if (value >= 1) {
-        return "1.000";
-      } else {
-        return value.toFixed(3).substr(1);
-      }
+      return value.toFixed(3).substr(1);
     }
   };
 
@@ -33,7 +32,6 @@
       this.fta = fta;
       this.ftm = ftm;
       this.pts = this.oreb = this.dreb = this.ast = this.blk = this.stl = this.pf = this.to = this.fga2 = this.fgm2 = this.fga3 = this.fgm3 = this.fta = this.ftm = 0;
-      this.appears = false;
     }
 
     Player.prototype.reb = function() {
@@ -60,51 +58,44 @@
 
   })();
 
-  data = null;
-
-  window.sort_by_name = function(a, b) {
-    if (a.name.substr(2) > b.name.substr(2)) {
-      return 1;
-    } else {
-      return -1;
+  create_initial_list = function(data) {
+    var filtered, id, list, player, team, _i, _len, _ref;
+    list = {};
+    _ref = data.players;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      team = _ref[_i];
+      for (id in team) {
+        player = team[id];
+        filtered = data.events.filter(function(ev) {
+          return ev.time <= 1440 && ev.player === id;
+        });
+        if (filtered.length > 0) {
+          list[id] = {
+            name: player.name,
+            team: player.team
+          };
+        }
+      }
     }
+    return list;
   };
 
   stats_to_time = function(time, data) {
-    var event, filtered, player, team, teams, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _player, _ref;
-    teams = (function() {
-      var _i, _len, _ref, _results;
-      _ref = data.players;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        team = _ref[_i];
-        _results.push((function() {
-          var _j, _len1, _results1;
-          _results1 = [];
-          for (_j = 0, _len1 = team.length; _j < _len1; _j++) {
-            player = team[_j];
-            _results1.push(new Player(player.id, player.name));
-          }
-          return _results1;
-        })());
-      }
-      return _results;
-    })();
+    var event, id, obj, object, player, teams, _i, _len, _ref;
+    teams = [{}, {}];
     _ref = data.events;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       event = _ref[_i];
       if (event.time > time) {
         break;
       }
-      player = null;
-      for (_j = 0, _len1 = teams.length; _j < _len1; _j++) {
-        team = teams[_j];
-        for (_k = 0, _len2 = team.length; _k < _len2; _k++) {
-          _player = team[_k];
-          if (_player.id === event.player) {
-            player = _player;
-          }
-        }
+      if (teams[event.team] && teams[event.team][event.player]) {
+        player = teams[event.team][event.player];
+      } else {
+        object = data.players[event.team][event.player];
+        obj = new Player(event.player, object.name);
+        teams[event.team][event.player] = obj;
+        player = obj;
       }
       switch (event.type) {
         case "dreb":
@@ -152,19 +143,12 @@
           player.ftm++;
           player.pts += 1;
       }
-      player.appears = true;
     }
     if (time <= 1440) {
-      for (_l = 0, _len3 = teams.length; _l < _len3; _l++) {
-        team = teams[_l];
-        for (_m = 0, _len4 = team.length; _m < _len4; _m++) {
-          player = team[_m];
-          filtered = data.events.filter(function(ev) {
-            return ev.time <= 1440 && ev.player === player.id;
-          });
-          if (filtered.length > 0) {
-            player.appears = true;
-          }
+      for (id in initial_list) {
+        player = initial_list[id];
+        if (!(teams[0][id] || teams[1][id])) {
+          teams[player.team][id] = new Player(id, player.name);
         }
       }
     }
@@ -191,12 +175,12 @@
     return team_stats.fga3 += player.fga3;
   };
 
-  window.update_table = function(time) {
+  update_table = function(time, data) {
     var stats, tbody;
     tbody = $("table#stats tbody").html("");
-    stats = stats_to_time(time, window.data);
+    stats = stats_to_time(time, data);
     stats.forEach(function(team, team_i) {
-      var key, team_stats, team_tr, _i, _len, _ref;
+      var id, key, player, team_stats, team_tr, total_points, total_rebounds, tr, _i, _len, _ref;
       team_stats = {
         points: 0,
         orebs: 0,
@@ -214,32 +198,30 @@
         fgm3: 0,
         fga3: 0
       };
-      tbody.append("<tr class=\"header\"><td colspan=\"13\">" + window.data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
-      team.sort(sort_by_name).forEach(function(player) {
-        var total_points, total_rebounds, tr;
-        if (player.appears) {
-          total_points = player.points();
-          total_rebounds = player.reb();
-          update_team_stats(team_stats, player);
-          team_stats.points += total_points;
-          team_stats.rebs += total_rebounds;
-          tr = $("<tr class=\"player\"></tr>");
-          tr.append("<td class=\"string\">" + player.name + "</td>");
-          tr.append("<td class=\"numeric\">" + total_points + "</td>");
-          tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
-          tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
-          tr.append("<td class=\"numeric\">" + total_rebounds + "</td>");
-          tr.append("<td class=\"numeric\">" + player.ast + "</td>");
-          tr.append("<td class=\"numeric\">" + player.stl + "</td>");
-          tr.append("<td class=\"numeric\">" + player.blk + "</td>");
-          tr.append("<td class=\"numeric\">" + player.pf + "</td>");
-          tr.append("<td class=\"numeric\">" + player.to + "</td>");
-          tr.append("<td class=\"fraction\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
-          tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
-          tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
-          return tbody.append(tr);
-        }
-      });
+      tbody.append("<tr class=\"header\"><td colspan=\"13\">" + data.teams[team_i] + " <span id=\"score-" + team_i + "\">&nbsp;</span></td></tr>");
+      for (id in team) {
+        player = team[id];
+        total_points = player.points();
+        total_rebounds = player.reb();
+        update_team_stats(team_stats, player);
+        team_stats.points += total_points;
+        team_stats.rebs += total_rebounds;
+        tr = $("<tr class=\"player\"></tr>");
+        tr.append("<td class=\"string\">" + player.name + "</td>");
+        tr.append("<td class=\"numeric\">" + total_points + "</td>");
+        tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
+        tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
+        tr.append("<td class=\"numeric\">" + total_rebounds + "</td>");
+        tr.append("<td class=\"numeric\">" + player.ast + "</td>");
+        tr.append("<td class=\"numeric\">" + player.stl + "</td>");
+        tr.append("<td class=\"numeric\">" + player.blk + "</td>");
+        tr.append("<td class=\"numeric\">" + player.pf + "</td>");
+        tr.append("<td class=\"numeric\">" + player.to + "</td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
+        tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
+        tbody.append(tr);
+      }
       team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>");
       _ref = ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -271,7 +253,7 @@
     update_stats = function(ev, ui) {
       var minutes_remaining_in_quarter, quarter, seconds, seconds_remaining_in_quarter;
       seconds = ui.value;
-      update_table(seconds);
+      update_table(seconds, window.data);
       if (seconds === 0) {
         quarter = 1;
         minutes_remaining_in_quarter = 12;
@@ -294,7 +276,8 @@
       slide: update_stats,
       change: update_stats
     });
-    return update_table(0);
+    window.initial_list = create_initial_list(window.data);
+    return update_table(0, window.data);
   });
 
 }).call(this);

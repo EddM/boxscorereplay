@@ -102,11 +102,11 @@ class Game
 
 		team_strings = []
 		[team0, team1].each do |team|
-			str = team.map { |player| "{ \"id\" : \"#{player.id}\", \"name\" : \"#{player.name}\" }" }.join(",")
-			team_strings << "[#{str}]"
+			str = team.map { |player| "\"#{player.id}\" : { \"name\" : \"#{player.name}\", \"team\" : #{player.team} }" }.join(",")
+			team_strings << "{ #{str} }"
 		end
 
-		events_string = events.all.map { |event| "{ \"player\" : \"#{event.player}\", \"type\" : \"#{event.type}\", \"time\" : #{event.time} }" }
+		events_string = events.all.map { |event| "{ \"player\" : \"#{event.player}\", \"type\" : \"#{event.type}\", \"time\" : #{event.time}, \"team\" : #{event.team} }" }
 		"{ \"teams\" : [\"#{away_team}\", \"#{home_team}\"], \"players\" : [#{team_strings.join(',')}], \"events\" : [#{events_string.join(',')}] }"
 	end
 
