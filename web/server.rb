@@ -13,17 +13,17 @@ require './lib/player.rb'
 DataMapper.finalize
 
 get '/' do
-	@games = Game.all(:limit => 50, :order => [:date.desc])
-	erb :index
+  @games = Game.all(:limit => 50, :order => [:date.desc])
+  erb :index
 end
 
 get '/about' do
-	erb :about
+  erb :about
 end
 
 get '/:id' do
-	@game = Game.first(:slug => params[:id])
-	@game_data = @game.to_json
-	erb :game
+  @game = Game.first(:slug => params[:id])
+  @game_data = @game.to_json
+  erb :game
 end
 
