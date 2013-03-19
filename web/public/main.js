@@ -248,28 +248,49 @@
   $(function() {
     var update_stats;
     update_stats = function(ev, ui) {
-      var minutes_remaining_in_quarter, quarter, seconds, seconds_remaining_in_quarter;
+      var max, minutes_remaining_in_quarter, ot_period, ot_seconds, quarter, seconds, seconds_remaining_in_quarter;
       seconds = ui.value;
+      if (ev.type === "slidechange") {
+        max = $("#slider").slider("option", "max");
+        if (seconds === max && data.events[data.events.length - 1].time > seconds) {
+          $("#slider").addClass('overtime');
+          $("#slider").slider("option", "max", max + 300);
+        }
+      }
       update_table(seconds, window.data);
       if (seconds === 0) {
-        quarter = 1;
+        quarter = "1Q";
         minutes_remaining_in_quarter = 12;
         seconds_remaining_in_quarter = 0;
       } else {
-        quarter = Math.ceil(seconds / 720);
-        seconds_remaining_in_quarter = 720 - (seconds - ((quarter - 1) * 720));
-        minutes_remaining_in_quarter = 0;
-        while (seconds_remaining_in_quarter >= 60) {
-          seconds_remaining_in_quarter -= 60;
-          minutes_remaining_in_quarter++;
+        if (seconds > 2880) {
+          ot_seconds = seconds - 2880;
+          ot_period = Math.ceil(ot_seconds / 300);
+          seconds_remaining_in_quarter = 300 - ot_seconds;
+          minutes_remaining_in_quarter = 0;
+          while (seconds_remaining_in_quarter >= 60) {
+            seconds_remaining_in_quarter -= 60;
+            minutes_remaining_in_quarter++;
+          }
+          quarter = "" + (ot_period >= 2 ? ot_period : "") + "OT";
+        } else {
+          quarter = Math.ceil(seconds / 720);
+          seconds_remaining_in_quarter = 720 - (seconds - ((quarter - 1) * 720));
+          minutes_remaining_in_quarter = 0;
+          while (seconds_remaining_in_quarter >= 60) {
+            seconds_remaining_in_quarter -= 60;
+            minutes_remaining_in_quarter++;
+          }
+          quarter = "" + quarter + "Q";
         }
       }
       seconds = seconds_remaining_in_quarter.toString().length === 1 ? "0" + seconds_remaining_in_quarter : seconds_remaining_in_quarter;
-      return $("#time").text("" + quarter + "Q " + minutes_remaining_in_quarter + ":" + seconds);
+      return $("#time").text("" + quarter + " " + minutes_remaining_in_quarter + ":" + seconds);
     };
     $("#slider").slider({
       min: 0,
       max: 2880,
+      animate: true,
       slide: update_stats,
       change: update_stats
     });

@@ -39,7 +39,7 @@ class Game
     @date = header[1]
     table = @doc.css('table.no_highlight.stats_table').last
     events = table.css('tr').each do |tr|
-      period += 1 if tr.text =~ /start of/i
+      period += 1 if tr.text =~ /(start of)/i
       next unless tr.css('td').size == 6
       parse_row(tr, period)
     end
@@ -169,7 +169,11 @@ class Game
 
   def timestamp_to_integer(timestamp, period)
     mins, seconds = timestamp.split(".")[0].split(":").collect { |t| t.to_i }
-    ((11 - mins) * 60) + (60 - seconds) + ((period - 1) * 720)
+    if period > 4
+      2880 + ((4 - mins) * 60) + (60 - seconds)
+    else
+      ((11 - mins) * 60) + (60 - seconds) + ((period - 1) * 720)
+    end
   end
 
   def player_id(element)
