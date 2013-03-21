@@ -247,6 +247,7 @@
 
   update_clock = function(seconds) {
     var minutes_remaining_in_quarter, ot_period, ot_seconds, quarter, seconds_remaining_in_quarter;
+    $("a#time").attr("href", "#" + seconds);
     if (seconds === 0) {
       quarter = "1Q";
       minutes_remaining_in_quarter = 12;
@@ -274,7 +275,7 @@
       }
     }
     seconds = seconds_remaining_in_quarter.toString().length === 1 ? "0" + seconds_remaining_in_quarter : seconds_remaining_in_quarter;
-    return $("#time").text("" + quarter + " " + minutes_remaining_in_quarter + ":" + seconds);
+    return $("a#time").text("" + quarter + " " + minutes_remaining_in_quarter + ":" + seconds);
   };
 
   update_overtime = function(seconds) {
@@ -305,7 +306,8 @@
       change: update_stats
     });
     window.initial_list = create_initial_list(window.data);
-    return update_table(0, window.data);
+    $("#slider").slider("option", "value", (window.location.hash != null ? parseInt(window.location.hash.substr(1)) : 0));
+    return update_table($("#slider").slider("option", "value"), window.data);
   });
 
 }).call(this);

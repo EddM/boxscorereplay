@@ -19,6 +19,12 @@ body {
 a { color: #B64E06; }
 a:hover, a:visited { color: #8B5F37; }
 
+a#time {
+	text-decoration: none;
+	border-bottom: 1px dotted #ccc;
+	color: #666;
+}
+
 .w50pc, .half-width { width: 50%; }
 .w40pc { width: 40%; }
 .float-right { float: right; }

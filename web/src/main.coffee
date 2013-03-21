@@ -133,6 +133,7 @@ update_table = (time, data) ->
     $(this).mouseout -> $(".tooltip").remove()
 
 update_clock = (seconds) ->
+  $("a#time").attr("href", "##{seconds}")
   if seconds == 0
       quarter = "1Q"
       minutes_remaining_in_quarter = 12
@@ -156,7 +157,7 @@ update_clock = (seconds) ->
           minutes_remaining_in_quarter++
         quarter = "#{quarter}Q"
     seconds = if seconds_remaining_in_quarter.toString().length == 1 then "0#{seconds_remaining_in_quarter}" else seconds_remaining_in_quarter
-    $("#time").text("#{quarter} #{minutes_remaining_in_quarter}:#{seconds}")
+    $("a#time").text("#{quarter} #{minutes_remaining_in_quarter}:#{seconds}")
 
 update_overtime = (seconds) ->
   max = $("#slider").slider("option", "max")
@@ -178,4 +179,5 @@ $ ->
     change: update_stats
 
   window.initial_list = create_initial_list(window.data)
-  update_table 0, window.data
+  $("#slider").slider "option", "value", (if window.location.hash? then parseInt(window.location.hash.substr(1)) else 0)
+  update_table $("#slider").slider("option", "value"), window.data
