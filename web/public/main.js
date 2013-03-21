@@ -1,5 +1,5 @@
 (function() {
-  var Player, create_initial_list, formatted_pct, shooting_stats_cell, stats_to_time, update_table, update_team_stats;
+  var Player, create_initial_list, formatted_pct, shooting_stats_cell, stats_to_time, update_clock, update_overtime, update_table, update_team_stats;
 
   formatted_pct = function(value) {
     if (isNaN(value)) {
@@ -245,47 +245,57 @@
     });
   };
 
+  update_clock = function(seconds) {
+    var minutes_remaining_in_quarter, ot_period, ot_seconds, quarter, seconds_remaining_in_quarter;
+    if (seconds === 0) {
+      quarter = "1Q";
+      minutes_remaining_in_quarter = 12;
+      seconds_remaining_in_quarter = 0;
+    } else {
+      if (seconds > 2880) {
+        ot_seconds = seconds - 2880;
+        ot_period = Math.ceil(ot_seconds / 300);
+        seconds_remaining_in_quarter = 300 - ot_seconds;
+        minutes_remaining_in_quarter = 0;
+        while (seconds_remaining_in_quarter >= 60) {
+          seconds_remaining_in_quarter -= 60;
+          minutes_remaining_in_quarter++;
+        }
+        quarter = "" + (ot_period >= 2 ? ot_period : "") + "OT";
+      } else {
+        quarter = Math.ceil(seconds / 720);
+        seconds_remaining_in_quarter = 720 - (seconds - ((quarter - 1) * 720));
+        minutes_remaining_in_quarter = 0;
+        while (seconds_remaining_in_quarter >= 60) {
+          seconds_remaining_in_quarter -= 60;
+          minutes_remaining_in_quarter++;
+        }
+        quarter = "" + quarter + "Q";
+      }
+    }
+    seconds = seconds_remaining_in_quarter.toString().length === 1 ? "0" + seconds_remaining_in_quarter : seconds_remaining_in_quarter;
+    return $("#time").text("" + quarter + " " + minutes_remaining_in_quarter + ":" + seconds);
+  };
+
+  update_overtime = function(seconds) {
+    var max;
+    max = $("#slider").slider("option", "max");
+    if (seconds === max && data.events[data.events.length - 1].time > seconds) {
+      $("#slider").addClass('overtime');
+      return $("#slider").slider("option", "max", max + 300);
+    }
+  };
+
   $(function() {
     var update_stats;
     update_stats = function(ev, ui) {
-      var max, minutes_remaining_in_quarter, ot_period, ot_seconds, quarter, seconds, seconds_remaining_in_quarter;
+      var seconds;
       seconds = ui.value;
       if (ev.type === "slidechange") {
-        max = $("#slider").slider("option", "max");
-        if (seconds === max && data.events[data.events.length - 1].time > seconds) {
-          $("#slider").addClass('overtime');
-          $("#slider").slider("option", "max", max + 300);
-        }
+        update_overtime(seconds);
       }
       update_table(seconds, window.data);
-      if (seconds === 0) {
-        quarter = "1Q";
-        minutes_remaining_in_quarter = 12;
-        seconds_remaining_in_quarter = 0;
-      } else {
-        if (seconds > 2880) {
-          ot_seconds = seconds - 2880;
-          ot_period = Math.ceil(ot_seconds / 300);
-          seconds_remaining_in_quarter = 300 - ot_seconds;
-          minutes_remaining_in_quarter = 0;
-          while (seconds_remaining_in_quarter >= 60) {
-            seconds_remaining_in_quarter -= 60;
-            minutes_remaining_in_quarter++;
-          }
-          quarter = "" + (ot_period >= 2 ? ot_period : "") + "OT";
-        } else {
-          quarter = Math.ceil(seconds / 720);
-          seconds_remaining_in_quarter = 720 - (seconds - ((quarter - 1) * 720));
-          minutes_remaining_in_quarter = 0;
-          while (seconds_remaining_in_quarter >= 60) {
-            seconds_remaining_in_quarter -= 60;
-            minutes_remaining_in_quarter++;
-          }
-          quarter = "" + quarter + "Q";
-        }
-      }
-      seconds = seconds_remaining_in_quarter.toString().length === 1 ? "0" + seconds_remaining_in_quarter : seconds_remaining_in_quarter;
-      return $("#time").text("" + quarter + " " + minutes_remaining_in_quarter + ":" + seconds);
+      return update_clock(seconds);
     };
     $("#slider").slider({
       min: 0,

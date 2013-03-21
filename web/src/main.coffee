@@ -62,7 +62,8 @@ stats_to_time = (time, data) ->
 
   teams
 
-shooting_stats_cell = (made, attempts) -> $("<td class=\"fraction\"><span title=\"#{formatted_pct(made / attempts)}\">#{made}/#{attempts}</span></td>")
+shooting_stats_cell = (made, attempts) -> 
+  $("<td class=\"fraction\"><span title=\"#{formatted_pct(made / attempts)}\">#{made}/#{attempts}</span></td>")
 
 update_team_stats = (team_stats, player) ->
   team_stats.orebs += player.oreb
@@ -131,17 +132,8 @@ update_table = (time, data) ->
       $(this).after tooltip
     $(this).mouseout -> $(".tooltip").remove()
 
-$ ->
-
-  update_stats = (ev, ui) -> 
-    seconds = ui.value
-    if ev.type == "slidechange"
-      max = $("#slider").slider("option", "max")
-      if seconds == max && data.events[data.events.length - 1].time > seconds
-        $("#slider").addClass('overtime')
-        $("#slider").slider("option", "max", max + 300)
-    update_table seconds, window.data
-    if seconds == 0
+update_clock = (seconds) ->
+  if seconds == 0
       quarter = "1Q"
       minutes_remaining_in_quarter = 12
       seconds_remaining_in_quarter = 0
@@ -166,9 +158,22 @@ $ ->
     seconds = if seconds_remaining_in_quarter.toString().length == 1 then "0#{seconds_remaining_in_quarter}" else seconds_remaining_in_quarter
     $("#time").text("#{quarter} #{minutes_remaining_in_quarter}:#{seconds}")
 
+update_overtime = (seconds) ->
+  max = $("#slider").slider("option", "max")
+  if seconds == max && data.events[data.events.length - 1].time > seconds
+    $("#slider").addClass('overtime')
+    $("#slider").slider("option", "max", max + 300)
+
+$ ->
+
+  update_stats = (ev, ui) -> 
+    seconds = ui.value
+    update_overtime seconds if ev.type == "slidechange"
+    update_table seconds, window.data
+    update_clock seconds
+
   $("#slider").slider
-    min: 0, max: 2880,
-    animate: true
+    min: 0, max: 2880, animate: true,
     slide: update_stats
     change: update_stats
 
