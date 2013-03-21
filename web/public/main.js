@@ -306,7 +306,7 @@
       change: update_stats
     });
     window.initial_list = create_initial_list(window.data);
-    $("#slider").slider("option", "value", (window.location.hash != null ? parseInt(window.location.hash.substr(1)) : 0));
+    $("#slider").slider("option", "value", ((window.location.hash != null) && window.location.hash !== '' ? parseInt(window.location.hash.substr(1)) : 0));
     return update_table($("#slider").slider("option", "value"), window.data);
   });
 

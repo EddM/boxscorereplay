@@ -179,5 +179,5 @@ $ ->
     change: update_stats
 
   window.initial_list = create_initial_list(window.data)
-  $("#slider").slider "option", "value", (if window.location.hash? then parseInt(window.location.hash.substr(1)) else 0)
+  $("#slider").slider "option", "value", (if window.location.hash? && window.location.hash != '' then parseInt(window.location.hash.substr(1)) else 0)
   update_table $("#slider").slider("option", "value"), window.data
