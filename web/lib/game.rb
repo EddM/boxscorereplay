@@ -85,6 +85,7 @@ class Game
   end
 
   def player_by_element(element, team)
+    return unless element
     id, name = player_id(element), element.text
 
     if player = @players.flatten.select { |p| p.id == id }[0]
@@ -124,10 +125,10 @@ class Game
     if cell.text =~ /offensive foul by/i
       player = player_by_element(cell.css('a:first-of-type'), team)
     else
-      player = player_by_element(cell.css('a:first-of-type'), team == 1 ? 0 : 1)
+      player = player_by_element(cell.css('a:first-of-type').first, team == 1 ? 0 : 1)
     end
 
-    @events << FlatEvent.new(player, :foul, timestamp)
+    @events << FlatEvent.new(player, :foul, timestamp) if player
   end
 
   def to(timestamp, cell, team)
