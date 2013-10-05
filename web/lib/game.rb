@@ -49,9 +49,9 @@ class Game
   def assess!
     @score = 0
     fetch_events
-    @score += 35 if overtime?
+    @score += 40 if overtime?
     @score += 20 if close_game?
-    @score += 15 if high_shooting_pct?
+    @score += 10 if high_shooting_pct?
     @score += 20 if very_high_scorer?
     high_scorers_bonus = (high_scorers * 5)
     high_scorers_bonus = 10 if high_scorers_bonus > 10
