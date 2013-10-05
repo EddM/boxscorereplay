@@ -15,8 +15,10 @@ DataMapper.finalize
 enable :sessions
 
 before do
-  @seen_animation = session[:seen_animation]
-  session[:seen_animation] = true
+  unless params[:uh_huh_show_me_the_bounce_yeah]
+    @seen_animation = session[:seen_animation]
+    session[:seen_animation] = true
+  end
 end
 
 get '/' do
