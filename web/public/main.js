@@ -239,7 +239,7 @@
       tbody.append(team_tr);
       return $("#score-" + team_i).html(team_stats.points);
     });
-    return $("span[title], th[title]").each(function() {
+    return $("span[title]").each(function() {
       $(this).data('title', $(this).attr('title'));
       $(this).attr('title', '');
       $(this).mouseover(function() {
