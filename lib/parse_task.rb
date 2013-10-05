@@ -38,6 +38,7 @@ class ParseTask
             puts "Fetching #{url}"
             game.build_from_html open(url)
             game.insert_into_db(key)
+            game.assess!
           rescue => e
             puts "*** Failed for #{key}"
             puts e.inspect

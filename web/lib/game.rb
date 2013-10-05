@@ -10,17 +10,18 @@ class Game
   property :bbref_key,  String
   property :slug,       String
   property :date,       DateTime
+  property :quality,    Integer
 
   has n, :events
 
-  attr_reader :players
+  attr_reader :players, :score
 
   def build_from_html(src = nil)
     @doc = Nokogiri::HTML(src)
     @players = [[], []]
     @events = []
 
-    parse
+    parse!
   end
 
   def insert_into_db(bbref_key)
@@ -32,7 +33,7 @@ class Game
     end
   end
 
-  def parse
+  def parse!
     period = 0
     header = @doc.css('h1').text.split(" Play-By-Play, ")
     @team0, @team1 = header[0].split(" at ")
@@ -43,6 +44,21 @@ class Game
       next unless tr.css('td').size == 6
       parse_row(tr, period)
     end
+  end
+
+  def assess!
+    @score = 0
+    fetch_events
+    @score += 35 if overtime?
+    @score += 20 if close_game?
+    @score += 15 if high_shooting_pct?
+    @score += 20 if very_high_scorer?
+    high_scorers_bonus = (high_scorers * 5)
+    high_scorers_bonus = 10 if high_scorers_bonus > 10
+    @score += high_scorers_bonus
+    
+    self.quality = @score
+    self.save
   end
 
   def parse_row(tr, period)
@@ -98,11 +114,11 @@ class Game
   end
 
   def to_json
-    team0 = self.events.all(:team => 0, :fields => [:player, :name], :unique => true).map { |p| Player.new(p.name, p.player, 0) }
-    team1 = self.events.all(:team => 1, :fields => [:player, :name], :unique => true).map { |p| Player.new(p.name, p.player, 1) }
+    fetch_events
 
     team_strings = []
-    [team0, team1].each do |team|
+    players = [@team0_events.map { |p| Player.new(p.name, p.player, 0) }, @team1_events.map { |p| Player.new(p.name, p.player, 1) }]
+    players.each do |team|
       str = team.map { |player| "\"#{player.id}\" : { \"name\" : \"#{player.name}\", \"team\" : #{player.team} }" }.join(",")
       team_strings << "{ #{str} }"
     end
@@ -115,7 +131,7 @@ class Game
     Time.new(date.year, date.month, date.day)
   end
   
-  private
+  # private
 
   def reb(timestamp, cell, team, type = :o)
     player_link = cell.css('a')
@@ -183,6 +199,96 @@ class Game
 
   def player_id(element)
     element.attr('href').to_s.split("/")[-1].split(".")[0]
+  end
+
+  def fetch_events
+    unless @team0_events && @team1_events
+      @team0_events = self.events.all(:team => 0, :unique => true)
+      @team1_events = self.events.all(:team => 1, :unique => true)
+    end
+  end
+
+  def close_game?
+    team0_score = @team0_events.reduce(0) do |score, event|
+      score + value = case event.type.to_sym
+        when :ftm then 1
+        when :fgm then 2
+        when :fgm3 then 3
+        else 
+          0
+      end
+    end
+
+    team1_score = @team1_events.reduce(0) do |score, event|
+      score + value = case event.type.to_sym
+        when :ftm then 1
+        when :fgm then 2
+        when :fgm3 then 3
+        else 
+          0
+      end
+    end
+
+    (team0_score - team1_score).abs <= 5
+  end
+
+  def overtime?
+    @team0_events.any? { |e| e.time > 2880 }
+  end
+
+  def players_with_points
+    return @players_with_points if @players_with_points
+    values = {}
+
+    (@team0_events + @team1_events).each do |event|
+      value = case event.type.to_sym
+        when :ftm then 1
+        when :fgm2 then 2
+        when :fgm3 then 3
+      end
+
+      values[event.player] ||= 0
+      values[event.player] += value if value
+    end
+
+    @players_with_points = values
+  end
+
+  def most_points
+    players_with_points.values.max
+  end
+
+  def high_scorer?
+    most_points >= 30
+  end
+
+  def very_high_scorer?
+    most_points >= 40
+  end
+
+  def high_scorers
+    players_with_points.values.select { |pts| pts >= 30 }.size
+  end
+
+  def high_shooting_pct?
+    players_with_shooting_pct = {}
+
+    (@team0_events + @team1_events).each do |event|
+      type = event.type.to_sym
+      players_with_shooting_pct[event.player] ||= { :fga => 0, :fgm => 0, :pct => 0 }
+
+      players_with_shooting_pct[event.player][:fga] += 1 if type == :fga2 || type == :fga3
+      if type == :fgm2 || type == :fgm3
+        players_with_shooting_pct[event.player][:fgm] += 1
+        players_with_shooting_pct[event.player][:fga] += 1
+      end
+
+      if players_with_shooting_pct[event.player][:fgm] > 0 && players_with_shooting_pct[event.player][:fga] > 0
+        players_with_shooting_pct[event.player][:pct] = (players_with_shooting_pct[event.player][:fgm] / players_with_shooting_pct[event.player][:fga].to_f)
+      end
+    end
+
+    players_with_shooting_pct.values.any? { |v| v[:pct] >= 0.825 && v[:fga] >= 12 }    
   end
 
 end

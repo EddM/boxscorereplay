@@ -17,6 +17,14 @@ task :run do
   task.run
 end
 
+task :assess do
+  config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
+  DataMapper::Logger.new($stdout, :debug)
+  DataMapper.setup(:default, "mysql://#{config.user}@#{config.host}/#{config.database}")
+  DataMapper.finalize
+  Game.all.each { |g| g.assess! }
+end
+
 namespace :db do
   task :migrate do
     require 'dm-migrations/migration_runner'

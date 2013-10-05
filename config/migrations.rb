@@ -32,3 +32,17 @@ migration 2, :create_events_table do
     drop_table :events
   end
 end
+
+migration 3, :add_game_quality do
+  up do
+    modify_table :games do
+      add_column :quality, Integer
+    end
+  end
+
+  down do
+    modify_table :games do
+      drop_column :quality
+    end
+  end
+end
