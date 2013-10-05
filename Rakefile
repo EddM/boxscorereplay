@@ -22,7 +22,18 @@ task :assess do
   DataMapper::Logger.new($stdout, :debug)
   DataMapper.setup(:default, "mysql://#{config.user}@#{config.host}/#{config.database}")
   DataMapper.finalize
-  Game.all.each { |g| g.assess! }
+
+  total = Game.count
+  page_size = 10
+  page = 0
+
+  while (page * page_size) < total
+    Game.all(:offset => page * page_size, :limit => page_size).each do |g| 
+      g.assess!
+    end
+    
+    page += 1
+  end
 end
 
 namespace :db do
