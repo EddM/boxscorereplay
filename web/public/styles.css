@@ -285,7 +285,7 @@ ul.games a {
   text-decoration: none;
 }
 
-  ul.games a:hover { opacity: 0.8; padding: 14px; border: 1px solid #ddd; }
+  ul.games a:hover { opacity: 0.7; padding: 14px; border: 1px solid #ccc; }
 
 .latency-warning { margin-top: 3em; }
 

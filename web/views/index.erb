@@ -1,6 +1,14 @@
 <h2>Available Box Score Replays</h2>
 
-<p class="w20pc float-right lighter smaller latency-warning">Games are automatically added as soon as data is available. Some may take longer than others &mdash; sorry!</p>
+<p class="w20pc float-right lighter smaller latency-warning">
+  Use Box Score Replay to progressively "replay" an NBA game's statistics, from tip-off to 
+  overtime so you can watch a game's box score unfold, spoiler-free, or pinpoint a player's 
+  stats at any point during a game.
+  <br /><br />
+
+  Games are automatically added as soon as data is available. Some may take longer than 
+  others &mdash; sorry!
+</p>
 
 <ul class="games float-left">
   <% @games.group_by(&:day).each do |day, games| %>
@@ -9,10 +17,7 @@
     <ul>
       <% games.each do |game| %>
         <li class="float-left">
-          <a href="/<%= game.slug %>" title="<%= game.date.strftime("%D") %>">
-            <%= game.away_team %> <br />
-            @ <%= game.home_team %>
-          </a>
+          <a href="/<%= game.slug %>"><%= game.away_team %> <br />@ <%= game.home_team %></a>
         </li>
       <% end %>
     </ul>
