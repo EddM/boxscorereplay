@@ -1,5 +1,4 @@
 require 'sinatra'
-require 'sinatra/contrib'
 require 'data_mapper'
 require '../lib/config.rb'
 
