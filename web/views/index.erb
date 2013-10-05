@@ -1,10 +1,19 @@
 <p class="lighter smaller">Games are automatically added as soon as data is available. Some may take longer than others &mdash; sorry!</p>
 
-<table>
-<% @games.each do |game| %>
-	<tr>
-		<td><a href="/<%= game.slug %>"><%= game.away_team %> @ <%= game.home_team %></td>
-		<td><%= game.date.strftime("%D") %></td>
-	</tr>
-<% end %>
-</table>
+<ul class="games">
+  <% @games.group_by(&:day).each do |day, games| %>
+  <li>
+    <%= day.strftime "%A, %B %e %Y" %>
+    <ul>
+      <% games.each do |game| %>
+        <li>
+          <a href="/<%= game.slug %>" title="<%= game.date.strftime("%D") %>">
+            <%= game.away_team %> <br />
+            @ <%= game.home_team %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+    <br class="clear" />
+  </li>
+  <% end %>

@@ -111,6 +111,10 @@ class Game
     "{ \"teams\" : [\"#{away_team}\", \"#{home_team}\"], \"players\" : [#{team_strings.join(',')}], \"events\" : [#{events_string.join(',')}] }"
   end
 
+  def day
+    Time.new(date.year, date.month, date.day)
+  end
+  
   private
 
   def reb(timestamp, cell, team, type = :o)

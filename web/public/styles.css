@@ -253,6 +253,34 @@ a#time {
   .quarter-markers.overtime a.q4 { left: 67%; }
   .quarter-markers.overtime a.ot { left: 90%; }
 
+ul.games, ul.games ul {
+  margin: 0;
+  list-style: none;
+}
+
+ul.games li {
+  margin-top: 2em;
+}
+
+ul.games li ul {
+  margin-top: 1em;
+}
+
+ul.games li ul li {
+  width: 225px;
+  float: left;
+  margin: 0 1em 1em 0;
+}
+
+ul.games a {
+  background: #eee;
+  padding: 1em;
+  display: block;
+  text-decoration: none;
+}
+
+  ul.games a:hover { opacity: 0.8; }
+
 /* jQuery UI ----------------------------------*/
 
 .ui-helper-hidden {
