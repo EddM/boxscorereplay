@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Box Score Replay</title>
+    <script type="text/javascript" src="//use.typekit.net/waz4ava.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <link rel="stylesheet" href="/styles.css?v=3" />
+
+    <script type="text/javascript" src="/jquery.js"></script>
+    <script type="text/javascript" src="/jquery-ui.js"></script>
+    <script type="text/javascript" src="/jquery.ui.touch-punch.js"></script>
+    <script type="text/javascript" src="/main.js?v=3"></script>
+  </head>
+  <body>
+
+    <header>
+      <h1><a <%= "class=\"animated\"" unless @seen_animation %> href="/">Box Score Replay</a></h1>
+
+      <nav>
+        <ul>
+          <li <% if !@section || @section == :games %>class="active"<% end %>><a href="/">Games</a></li>
+          <li <% if @section == :about %>class="active"<% end %>><a href="/about">About</a></li>
+        </ul>
+      </nav>
+
+      <br class="clear" />
+    </header>
+
+    <section>
+      <%= yield %>
+    </section>
+
+    <footer>
+      <p class="smaller align-right">
+        This thing was made by <a href="http://www.eddmorgan.com">Edd</a>
+      </p>
+    </footer>
+
+  </body>
+</html>

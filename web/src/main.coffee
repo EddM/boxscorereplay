@@ -65,6 +65,13 @@ stats_to_time = (time, data) ->
 shooting_stats_cell = (made, attempts) -> 
   $("<td class=\"fraction\"><span title=\"#{formatted_pct(made / attempts)}\">#{made}/#{attempts}</span></td>")
 
+set_quarter_markers = () ->
+  max = $("#slider").slider "option", "max"
+  $(".quarter-markers .q2").css 'left', "#{100 / (max / 720)}%"
+  $(".quarter-markers .q3").css 'left', "#{100 / (max / 1440)}%"
+  $(".quarter-markers .q4").css 'left', "#{100 / (max / 2160)}%"
+  $(".quarter-markers .ot").css 'left', "#{100 / (max / 2880)}%"
+
 update_team_stats = (team_stats, player) ->
   team_stats.orebs += player.oreb
   team_stats.drebs += player.dreb
@@ -110,9 +117,9 @@ update_table = (time, data) ->
       tr.append "<td class=\"numeric\">#{player.blk}</td>"
       tr.append "<td class=\"numeric\">#{player.pf}</td>"
       tr.append "<td class=\"numeric\">#{player.to}</td>"
-      tr.append "<td class=\"fraction\"><span title=\"#{player.fgpc()}\">#{player.fgm2 + player.fgm3}/#{player.fga2 + player.fga3}</span></td>"
-      tr.append "<td class=\"fraction\"><span title=\"#{player.fg3pc()}\">#{player.fgm3}/#{player.fga3}</span></td>"
-      tr.append "<td class=\"fraction\"><span title=\"#{player.ftpc()}\">#{player.ftm}/#{player.fta}</span></td>"
+      tr.append "<td class=\"fraction align-right\"><span title=\"#{player.fgpc()}\">#{player.fgm2 + player.fgm3}/#{player.fga2 + player.fga3}</span></td>"
+      tr.append "<td class=\"fraction align-right\"><span title=\"#{player.fg3pc()}\">#{player.fgm3}/#{player.fga3}</span></td>"
+      tr.append "<td class=\"fraction align-right\"><span title=\"#{player.ftpc()}\">#{player.ftm}/#{player.fta}</span></td>"
       tbody.append tr
 
     team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>")
@@ -142,7 +149,7 @@ update_clock = (seconds) ->
       if seconds > 2880
         ot_seconds = seconds - 2880
         ot_period = Math.ceil(ot_seconds / 300)
-        seconds_remaining_in_quarter = 300 - ot_seconds
+        seconds_remaining_in_quarter = (300 * ot_period) - ot_seconds
         minutes_remaining_in_quarter = 0
         while seconds_remaining_in_quarter >= 60
           seconds_remaining_in_quarter -= 60
@@ -160,10 +167,14 @@ update_clock = (seconds) ->
     $("a#time").text("#{quarter} #{minutes_remaining_in_quarter}:#{seconds}")
 
 update_overtime = (seconds) ->
-  max = $("#slider").slider("option", "max")
+  max = $("#slider").slider "option", "max"
   if seconds == max && data.events[data.events.length - 1].time > seconds
-    $("#slider").addClass('overtime')
-    $("#slider").slider("option", "max", max + 300)
+    ot_seconds = seconds - 2880
+    ot_period = Math.ceil ot_seconds / 300
+    $("#slider, .quarter-markers").addClass "overtime ot#{ot_period}"
+    $(".quarter-markers").append $("<a class=\"ot\">OT</a>") unless $(".quarter-markers .ot").length > 0
+    $("#slider").slider "option", "max", max + 300
+    set_quarter_markers()
 
 $ ->
 
@@ -178,6 +189,8 @@ $ ->
     slide: update_stats
     change: update_stats
 
+  $("#slider").after $("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>")
   window.initial_list = create_initial_list(window.data)
   $("#slider").slider "option", "value", (if window.location.hash? && window.location.hash != '' then parseInt(window.location.hash.substr(1)) else 0)
   update_table $("#slider").slider("option", "value"), window.data
+  set_quarter_markers()

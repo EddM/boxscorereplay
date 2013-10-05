@@ -1,44 +1,10 @@
-<html>
-	<head>
-		<title>Box Score Replay</title>
-		<script type="text/javascript" src="//use.typekit.net/waz4ava.js"></script>
-		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-		<link rel="stylesheet" href="/styles.css?v=2" />
-	</head>
-	<body>
+<p class="lighter smaller">Games are automatically added as soon as data is available. Some may take longer than others &mdash; sorry!</p>
 
-		<script type="text/javascript">
-
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-1503843-15']);
-		  _gaq.push(['_trackPageview']);
-
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-
-		</script>
-
-		<section>
-			<h1>Box Score Replay</h1>
-
-			<p class="lighter smaller">Games are automatically added as soon as data is available. Some may take longer than others &mdash; sorry!</p>
-
-			<table>
-			<% @games.each do |game| %>
-				<tr>
-					<td><a href="/<%= game.slug %>"><%= game.away_team %> @ <%= game.home_team %></td>
-					<td><%= game.date.strftime("%D") %></td>
-				</tr>
-			<% end %>
-			</table>
-
-			<p class="smaller align-right">
-				<a href="/about">About</a> &middot; This thing was made by <a href="http://www.eddmorgan.com">Edd</a>
-			</p>
-		</section>
-
-	</body>
-</html>
+<table>
+<% @games.each do |game| %>
+	<tr>
+		<td><a href="/<%= game.slug %>"><%= game.away_team %> @ <%= game.home_team %></td>
+		<td><%= game.date.strftime("%D") %></td>
+	</tr>
+<% end %>
+</table>

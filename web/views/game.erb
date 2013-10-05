@@ -1,72 +1,33 @@
-<html>
-	<head>		
-		<title>Box Score Replay - <%= @game.away_team %> @ <%= @game.home_team %>, <%= @game.date.strftime("%D") %></title>
-		<script type="text/javascript">
-			var data = <%= @game_data %>;
-		</script>
-		<script type="text/javascript" src="/jquery.js"></script>
-		<script type="text/javascript" src="/jquery-ui.js"></script>
-		<script type="text/javascript" src="/jquery.ui.touch-punch.js"></script>
-		<script type="text/javascript" src="/main.js?v=2"></script>
+<title>Box Score Replay - <%= @game.away_team %> @ <%= @game.home_team %>, <%= @game.date.strftime("%D") %></title>
 
-		<script type="text/javascript" src="//use.typekit.net/waz4ava.js"></script>
-		<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+<div id="slider"></div>
 
-		<link rel="stylesheet" href="/styles.css?v=2" />
-	</head>
-	<body>
+<p class="clear lighter smaller w70pc float-left tutorial">Drag the orange box across to travel through time. Drag it all the way to the end to enable overtime (if any).</p>
+<p class="align-right w30pc float-right">Box score at: <a title="Link to this particular time in the game" id="time">1Q 12:00</a></p>
 
-		<script type="text/javascript">
+<table id="stats" class="clear">
+	<thead>
+		<tr>
+			<th class="align-left"></th>
+			<th class="value-col pts" title="Points">PTS</th>
+			<th class="value-col or" title="Offensive Rebounds">OR</th>
+			<th class="value-col dr" title="Defensive Rebounds">DR</th>
+			<th class="value-col reb" title="Total Rebounds">REB</th>
+			<th class="value-col ast" title="Assists">AST</th>
+			<th class="value-col stl" title="Steals">STL</th>
+			<th class="value-col blk" title="Blocks">BLK</th>
+			<th class="value-col pf" title="Personal Fouls">PF</th>
+			<th class="value-col to" title="Turnovers">TO</th>
+			<th class="value-col align-right fg" title="Field Goals (Made / Attempted)">FG</th>
+			<th class="value-col align-right fg3" title="3-point Field Goals (Made / Attempted)">3FG</th>
+			<th class="value-col align-right ft" title="Free Throws (Made / Attempted)">FT</th>
+		</tr>
+	</thead>
+	<tbody>
 
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-1503843-15']);
-		  _gaq.push(['_trackPageview']);
+	</tbody>
+</table>
 
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
+<p class="align-right">View full stats at <a href="http://www.basketball-reference.com/boxscores/<%= @game.bbref_key %>.html">Basketball-Reference</a>.</p>
 
-		</script>
-		
-		<section>
-
-			<div id="slider"></div>
-
-			<p class="lighter smaller half-width float-left">Drag the orange box across to travel through time. Drag it all the way to the end to enable overtime (if any).</p>
-			<p class="align-right w40pc float-right">Box score at: <a title="Link to this particular time in the game" id="time">1Q 12:00</a></p>
-
-			<table id="stats" class="clear">
-				<thead>
-					<tr>
-						<th class="align-left"></th>
-						<th class="value-col">PTS</th>
-						<th class="value-col">OR</th>
-						<th class="value-col">DR</th>
-						<th class="value-col">REB</th>
-						<th class="value-col">AST</th>
-						<th class="value-col">STL</th>
-						<th class="value-col">BLK</th>
-						<th class="value-col">PF</th>
-						<th class="value-col">TO</th>
-						<th class="value-col align-right">FG</th>
-						<th class="value-col align-right">3FG</th>
-						<th class="value-col align-right">FT</th>
-					</tr>
-				</thead>
-				<tbody>
-
-				</tbody>
-			</table>
-
-			<p class="half-width float-left"><a href="/">Box Score Replay</a></p>
-			<p class="half-width float-left align-right">View full stats at <a href="http://www.basketball-reference.com/boxscores/<%= @game.bbref_key %>.html">Basketball-Reference</a>.</p>
-
-			<p class="smaller align-right">
-				<a href="/about">About</a> &middot; This thing was made by <a href="http://www.eddmorgan.com">Edd</a>
-			</p>
-		</section>
-
-	</body>
-</html>
+<script type="text/javascript"> window.data = <%= @game_data %>; </script>

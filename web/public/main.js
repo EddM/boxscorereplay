@@ -1,5 +1,5 @@
 (function() {
-  var Player, create_initial_list, formatted_pct, shooting_stats_cell, stats_to_time, update_clock, update_overtime, update_table, update_team_stats;
+  var Player, create_initial_list, formatted_pct, set_quarter_markers, shooting_stats_cell, stats_to_time, update_clock, update_overtime, update_table, update_team_stats;
 
   formatted_pct = function(value) {
     if (isNaN(value)) {
@@ -13,7 +13,6 @@
   };
 
   Player = (function() {
-
     function Player(id, name, pts, oreb, dreb, ast, blk, stl, pf, to, fga2, fgm2, fga3, fgm3, fta, ftm) {
       this.id = id;
       this.name = name;
@@ -156,6 +155,15 @@
     return $("<td class=\"fraction\"><span title=\"" + (formatted_pct(made / attempts)) + "\">" + made + "/" + attempts + "</span></td>");
   };
 
+  set_quarter_markers = function() {
+    var max;
+    max = $("#slider").slider("option", "max");
+    $(".quarter-markers .q2").css('left', "" + (100 / (max / 720)) + "%");
+    $(".quarter-markers .q3").css('left', "" + (100 / (max / 1440)) + "%");
+    $(".quarter-markers .q4").css('left', "" + (100 / (max / 2160)) + "%");
+    return $(".quarter-markers .ot").css('left', "" + (100 / (max / 2880)) + "%");
+  };
+
   update_team_stats = function(team_stats, player) {
     team_stats.orebs += player.oreb;
     team_stats.drebs += player.dreb;
@@ -214,9 +222,9 @@
         tr.append("<td class=\"numeric\">" + player.blk + "</td>");
         tr.append("<td class=\"numeric\">" + player.pf + "</td>");
         tr.append("<td class=\"numeric\">" + player.to + "</td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
-        tr.append("<td class=\"fraction\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
+        tr.append("<td class=\"fraction align-right\"><span title=\"" + (player.fgpc()) + "\">" + (player.fgm2 + player.fgm3) + "/" + (player.fga2 + player.fga3) + "</span></td>");
+        tr.append("<td class=\"fraction align-right\"><span title=\"" + (player.fg3pc()) + "\">" + player.fgm3 + "/" + player.fga3 + "</span></td>");
+        tr.append("<td class=\"fraction align-right\"><span title=\"" + (player.ftpc()) + "\">" + player.ftm + "/" + player.fta + "</span></td>");
         tbody.append(tr);
       }
       team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>");
@@ -231,7 +239,7 @@
       tbody.append(team_tr);
       return $("#score-" + team_i).html(team_stats.points);
     });
-    return $("span[title]").each(function() {
+    return $("span[title], th[title]").each(function() {
       $(this).data('title', $(this).attr('title'));
       $(this).attr('title', '');
       $(this).mouseover(function() {
@@ -256,7 +264,7 @@
       if (seconds > 2880) {
         ot_seconds = seconds - 2880;
         ot_period = Math.ceil(ot_seconds / 300);
-        seconds_remaining_in_quarter = 300 - ot_seconds;
+        seconds_remaining_in_quarter = (300 * ot_period) - ot_seconds;
         minutes_remaining_in_quarter = 0;
         while (seconds_remaining_in_quarter >= 60) {
           seconds_remaining_in_quarter -= 60;
@@ -279,11 +287,17 @@
   };
 
   update_overtime = function(seconds) {
-    var max;
+    var max, ot_period, ot_seconds;
     max = $("#slider").slider("option", "max");
     if (seconds === max && data.events[data.events.length - 1].time > seconds) {
-      $("#slider").addClass('overtime');
-      return $("#slider").slider("option", "max", max + 300);
+      ot_seconds = seconds - 2880;
+      ot_period = Math.ceil(ot_seconds / 300);
+      $("#slider, .quarter-markers").addClass("overtime ot" + ot_period);
+      if (!($(".quarter-markers .ot").length > 0)) {
+        $(".quarter-markers").append($("<a class=\"ot\">OT</a>"));
+      }
+      $("#slider").slider("option", "max", max + 300);
+      return set_quarter_markers();
     }
   };
 
@@ -305,9 +319,11 @@
       slide: update_stats,
       change: update_stats
     });
+    $("#slider").after($("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>"));
     window.initial_list = create_initial_list(window.data);
     $("#slider").slider("option", "value", ((window.location.hash != null) && window.location.hash !== '' ? parseInt(window.location.hash.substr(1)) : 0));
-    return update_table($("#slider").slider("option", "value"), window.data);
+    update_table($("#slider").slider("option", "value"), window.data);
+    return set_quarter_markers();
   });
 
 }).call(this);
