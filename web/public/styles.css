@@ -8,6 +8,7 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address
 .float-left { float: left; }
 .float-right { float: right; }
 .w70pc { width: 70%; }
+.w65pc { width: 65%; }
 .w50pc, .half-width { width: 50%; }
 .w40pc { width: 40%; }
 .w30pc { width: 30%; }
