@@ -11,6 +11,7 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address
 .w50pc, .half-width { width: 50%; }
 .w40pc { width: 40%; }
 .w30pc { width: 30%; }
+.w20pc { width: 20%; }
 .align-right { text-align: right; }
 .no-margin { margin: 0; }
 
@@ -253,15 +254,18 @@ a#time {
   .quarter-markers.overtime a.q4 { left: 67%; }
   .quarter-markers.overtime a.ot { left: 90%; }
 
+ul.games {
+  width: 720px;
+}
+
 ul.games, ul.games ul {
   margin: 0;
   list-style: none;
 }
 
-ul.games li {
-  margin-top: 2em;
+ul.games > li {
+  margin-bottom: 2em;
   min-width: 225px;
-  float: left;
 }
 
 ul.games li ul {
@@ -270,18 +274,19 @@ ul.games li ul {
 
 ul.games li ul li {
   width: 225px;
-  float: left;
   margin: 0 1em 1em 0;
 }
 
 ul.games a {
-  background: #eee;
-  padding: 1em;
+  background: #EFEFEF;
+  padding: 15px;
   display: block;
   text-decoration: none;
 }
 
-  ul.games a:hover { opacity: 0.8; }
+  ul.games a:hover { opacity: 0.8; padding: 14px; border: 1px solid #ddd; }
+
+.latency-warning { margin-top: 3em; }
 
 /* jQuery UI ----------------------------------*/
 

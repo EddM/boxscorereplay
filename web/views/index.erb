@@ -1,12 +1,14 @@
-<p class="lighter smaller">Games are automatically added as soon as data is available. Some may take longer than others &mdash; sorry!</p>
+<h2>Available Box Score Replays</h2>
 
-<ul class="games">
+<p class="w20pc float-right lighter smaller latency-warning">Games are automatically added as soon as data is available. Some may take longer than others &mdash; sorry!</p>
+
+<ul class="games float-left">
   <% @games.group_by(&:day).each do |day, games| %>
-  <li>
+  <li class="float-left">
     <%= day.strftime "%A, %B %e %Y" %>
     <ul>
       <% games.each do |game| %>
-        <li>
+        <li class="float-left">
           <a href="/<%= game.slug %>" title="<%= game.date.strftime("%D") %>">
             <%= game.away_team %> <br />
             @ <%= game.home_team %>
