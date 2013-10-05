@@ -260,6 +260,8 @@ ul.games, ul.games ul {
 
 ul.games li {
   margin-top: 2em;
+  min-width: 225px;
+  float: left;
 }
 
 ul.games li ul {
