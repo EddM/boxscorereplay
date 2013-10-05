@@ -316,6 +316,7 @@
       min: 0,
       max: 2880,
       animate: true,
+      range: 'min',
       slide: update_stats,
       change: update_stats
     });

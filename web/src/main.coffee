@@ -185,7 +185,7 @@ $ ->
     update_clock seconds
 
   $("#slider").slider
-    min: 0, max: 2880, animate: true,
+    min: 0, max: 2880, animate: true, range: 'min',
     slide: update_stats
     change: update_stats
 

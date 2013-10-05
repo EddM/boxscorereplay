@@ -368,6 +368,7 @@ ul.games a {
   display: block;
   border: 0;
   background-position: 0 0;
+  background: #b2b2b2;
 }
 
 /* For IE8 - See #6727 */
@@ -404,3 +405,5 @@ ul.games a {
 .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
 .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
 .ui-slider-vertical .ui-slider-range-max { top: 0; }
+
+
