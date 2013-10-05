@@ -159,9 +159,13 @@ a {
   color: #de480b;
 }
 
-p {
+section p, footer p, section ul, section ol {
   margin-bottom: 1.5em;
   line-height: 1.4em;
+}
+
+section ul, section ol {
+  margin-left: 2em;
 }
 
 section {

@@ -31,8 +31,10 @@ get '/about' do
 end
 
 get '/:id' do
-  @game = Game.first(:slug => params[:id])
-  @game_data = @game.to_json
-  erb :game
+  if @game = Game.first(:slug => params[:id])
+    @game_data = @game.to_json
+    erb :game
+  else
+    erb :game_not_found
+  end
 end
-
