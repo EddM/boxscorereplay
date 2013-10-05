@@ -1,5 +1,3 @@
-<title>Box Score Replay - <%= @game.away_team %> @ <%= @game.home_team %>, <%= @game.date.strftime("%D") %></title>
-
 <div id="slider"></div>
 
 <p class="clear lighter smaller w70pc float-left tutorial">Drag the orange box across to travel through time. Drag it all the way to the end to enable overtime (if any).</p>
@@ -28,6 +26,13 @@
 	</tbody>
 </table>
 
-<p class="align-right">View full stats at <a href="http://www.basketball-reference.com/boxscores/<%= @game.bbref_key %>.html">Basketball-Reference</a>.</p>
+<p class="half-width float-left no-margin">
+	<a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-hashtags="NBA">Tweet</a>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</p>
+
+<p class="half-width float-left align-right no-margin">View full stats at <a href="http://www.basketball-reference.com/boxscores/<%= @game.bbref_key %>.html">Basketball-Reference</a>.</p>
+
+<br class="clear" />
 
 <script type="text/javascript"> window.data = <%= @game_data %>; </script>

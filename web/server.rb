@@ -27,12 +27,14 @@ end
 
 get '/about' do
   @section = :about
+  @page_title = "About"
   erb :about
 end
 
 get '/:id' do
-  if @game = Game.first(:slug => params[:id])
+  if @game = Game.first(:slug => params[:id].downcase)
     @game_data = @game.to_json
+    @page_title = "#{@game.away_team} @ #{@game.home_team}, #{@game.date.strftime("%D")}"
     erb :game
   else
     erb :game_not_found
