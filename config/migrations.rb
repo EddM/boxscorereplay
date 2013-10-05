@@ -1,0 +1,34 @@
+migration 1, :create_games_table do
+  up do
+    create_table :games do
+      column :id, Integer, :serial => true
+      column :home_team, String
+      column :away_team, String
+      column :bbref_key, String
+      column :slug, String
+      column :date, DateTime
+    end
+  end
+
+  down do
+    drop_table :games
+  end
+end
+
+migration 2, :create_events_table do
+  up do
+    create_table :events do
+      column :id, Integer, :serial => true
+      column :game_id, Integer
+      column :player, String
+      column :type, String
+      column :time, Integer
+      column :name, String
+      column :team, Integer
+    end
+  end
+
+  down do
+    drop_table :events
+  end
+end

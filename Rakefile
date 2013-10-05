@@ -20,11 +20,25 @@ end
 
 namespace :db do
   task :migrate do
-    config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
+    require 'dm-migrations/migration_runner'
+    require './config/migrations.rb'
 
+    config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
     DataMapper::Logger.new($stdout, :debug)
     DataMapper.setup(:default, "mysql://#{config.user}@#{config.host}/#{config.database}")
     DataMapper.finalize
-    DataMapper.auto_migrate!
+
+    puts "Migrating database..."
+    migrate_up!
+  end
+
+  task :backup do
+    puts "Backing up database..."
+    config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
+    dump_file = "./bsr_#{Time.now.to_i}_dump.sql.gz"
+    cmd = "mysqldump --quick --single-transaction --create-options -u#{config.user}  --flush-logs --master-data=2 --delete-master-logs"
+    cmd += " -p'#{config.password}'" if config.password
+    cmd += " #{config.database} | gzip > #{dump_file}"
+    `#{cmd}`
   end
 end
