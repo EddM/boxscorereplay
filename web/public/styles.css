@@ -287,7 +287,23 @@ ul.games a {
 
   ul.games a:hover { opacity: 0.7; padding: 14px; border: 1px solid #ccc; }
 
-.latency-warning { margin-top: 3em; }
+.quality-indicator {
+  position: absolute;
+  color: white;
+  display: block;
+  width: 30px;
+  height: 30px; line-height: 28px;
+  -webkit-border-radius: 1em;
+  border-radius: 1em;
+  background: #aaa;
+  text-align: center;
+  margin-left: 190px;
+  margin-top: -25px;
+}
+
+  .quality-indicator.good     { background: #FEBE30; }
+  .quality-indicator.great    { background: #FF8000; }
+  .quality-indicator.awesome  { background: #FC4208; }
 
 /* jQuery UI ----------------------------------*/
 

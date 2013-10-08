@@ -176,21 +176,40 @@ update_overtime = (seconds) ->
     $("#slider").slider "option", "max", max + 300
     set_quarter_markers()
 
+update_stats = (ev, ui) -> 
+  seconds = ui.value
+  update_overtime seconds if ev.type == "slidechange"
+  update_table seconds, window.data
+  update_clock seconds
+
 $ ->
 
-  update_stats = (ev, ui) -> 
-    seconds = ui.value
-    update_overtime seconds if ev.type == "slidechange"
-    update_table seconds, window.data
-    update_clock seconds
+  toggle_game_quality_indicators = (show) ->
+    if $("#show-game-quality-scores").is ":checked"
+      $("li[data-game-quality]").each ->
+        num = $(this).data('game-quality')
+        css_class = switch
+          when num >= 40 && num <= 59 then 'good'
+          when num >= 60 && num <= 69 then 'great'
+          when num >= 70 then 'awesome'
+          else 'average'
+        $(this).find('a').prepend $("<span class=\"quality-indicator #{css_class}\">#{num}</span>").hide()
+        $('.quality-indicator').fadeIn 250
+    else
+      $(".quality-indicator").fadeOut 250, -> $(".quality-indicator").remove()
 
-  $("#slider").slider
-    min: 0, max: 2880, animate: true, range: 'min',
-    slide: update_stats
-    change: update_stats
+  $("#show-game-quality-scores").change toggle_game_quality_indicators
+  toggle_game_quality_indicators()
 
-  $("#slider").after $("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>")
-  window.initial_list = create_initial_list(window.data)
-  $("#slider").slider "option", "value", (if window.location.hash? && window.location.hash != '' then parseInt(window.location.hash.substr(1)) else 0)
-  update_table $("#slider").slider("option", "value"), window.data
-  set_quarter_markers()
+  if window.data
+
+    $("#slider").slider
+      min: 0, max: 2880, animate: true, range: 'min',
+      slide: update_stats
+      change: update_stats
+
+    $("#slider").after $("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>")
+    window.initial_list = create_initial_list(window.data)
+    $("#slider").slider "option", "value", (if window.location.hash? && window.location.hash != '' then parseInt(window.location.hash.substr(1)) else 0)
+    update_table $("#slider").slider("option", "value"), window.data
+    set_quarter_markers()

@@ -1,5 +1,5 @@
 (function() {
-  var Player, create_initial_list, formatted_pct, set_quarter_markers, shooting_stats_cell, stats_to_time, update_clock, update_overtime, update_table, update_team_stats;
+  var Player, create_initial_list, formatted_pct, set_quarter_markers, shooting_stats_cell, stats_to_time, update_clock, update_overtime, update_stats, update_table, update_team_stats;
 
   formatted_pct = function(value) {
     if (isNaN(value)) {
@@ -301,30 +301,61 @@
     }
   };
 
+  update_stats = function(ev, ui) {
+    var seconds;
+    seconds = ui.value;
+    if (ev.type === "slidechange") {
+      update_overtime(seconds);
+    }
+    update_table(seconds, window.data);
+    return update_clock(seconds);
+  };
+
   $(function() {
-    var update_stats;
-    update_stats = function(ev, ui) {
-      var seconds;
-      seconds = ui.value;
-      if (ev.type === "slidechange") {
-        update_overtime(seconds);
+    var toggle_game_quality_indicators;
+    toggle_game_quality_indicators = function(show) {
+      if ($("#show-game-quality-scores").is(":checked")) {
+        return $("li[data-game-quality]").each(function() {
+          var css_class, num;
+          num = $(this).data('game-quality');
+          css_class = (function() {
+            switch (false) {
+              case !(num >= 40 && num <= 59):
+                return 'good';
+              case !(num >= 60 && num <= 69):
+                return 'great';
+              case !(num >= 70):
+                return 'awesome';
+              default:
+                return 'average';
+            }
+          })();
+          $(this).find('a').prepend($("<span class=\"quality-indicator " + css_class + "\">" + num + "</span>").hide());
+          return $('.quality-indicator').fadeIn(250);
+        });
+      } else {
+        return $(".quality-indicator").fadeOut(250, function() {
+          return $(".quality-indicator").remove();
+        });
       }
-      update_table(seconds, window.data);
-      return update_clock(seconds);
     };
-    $("#slider").slider({
-      min: 0,
-      max: 2880,
-      animate: true,
-      range: 'min',
-      slide: update_stats,
-      change: update_stats
-    });
-    $("#slider").after($("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>"));
-    window.initial_list = create_initial_list(window.data);
-    $("#slider").slider("option", "value", ((window.location.hash != null) && window.location.hash !== '' ? parseInt(window.location.hash.substr(1)) : 0));
-    update_table($("#slider").slider("option", "value"), window.data);
-    return set_quarter_markers();
+    $("#show-game-quality-scores").change(toggle_game_quality_indicators);
+    toggle_game_quality_indicators();
+    if (window.data) {
+      $("#slider").slider({
+        min: 0,
+        max: 2880,
+        animate: true,
+        range: 'min',
+        slide: update_stats,
+        change: update_stats
+      });
+      $("#slider").after($("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>"));
+      window.initial_list = create_initial_list(window.data);
+      $("#slider").slider("option", "value", ((window.location.hash != null) && window.location.hash !== '' ? parseInt(window.location.hash.substr(1)) : 0));
+      update_table($("#slider").slider("option", "value"), window.data);
+      return set_quarter_markers();
+    }
   });
 
 }).call(this);
