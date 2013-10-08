@@ -186,6 +186,7 @@ footer {
 /* Specific */
 
 .smaller { font-size: 0.85em; }
+.larger { font-size: 1.2em; }
 .lighter { color: #848484; }
 
 table {
