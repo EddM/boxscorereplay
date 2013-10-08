@@ -32,6 +32,12 @@ get '/about' do
   erb :about
 end
 
+get '/about/update-2013' do
+  @section = :about
+  @page_title = "About - 2013-14 Update"
+  erb :update_2013
+end
+
 get '/:id' do
   if @game = Game.first(:slug => params[:id].downcase)
     @game_data = @game.to_json
