@@ -257,7 +257,7 @@ a#time {
   .quarter-markers.overtime a.ot { left: 90%; }
 
 ul.games {
-  width: 720px;
+  width: 700px;
 }
 
 ul.games, ul.games ul {
@@ -267,7 +267,7 @@ ul.games, ul.games ul {
 
 ul.games > li {
   margin-bottom: 2em;
-  min-width: 225px;
+  min-width: 220px;
 }
 
 ul.games li ul {
@@ -275,8 +275,9 @@ ul.games li ul {
 }
 
 ul.games li ul li {
-  width: 225px;
-  margin: 0 1em 1em 0;
+  font-size: 0.95em;
+  width: 210px;
+  margin: 0 10px 1em 0;
 }
 
 ul.games a {
