@@ -318,20 +318,22 @@
         return $("li[data-game-quality]").each(function() {
           var css_class, num;
           num = $(this).data('game-quality');
-          css_class = (function() {
-            switch (false) {
-              case !(num >= 40 && num <= 59):
-                return 'good';
-              case !(num >= 60 && num <= 69):
-                return 'great';
-              case !(num >= 70):
-                return 'awesome';
-              default:
-                return 'average';
-            }
-          })();
-          $(this).find('a').prepend($("<span class=\"quality-indicator " + css_class + "\">" + num + "</span>").hide());
-          return $('.quality-indicator').fadeIn(250);
+          if (num > 0) {
+            css_class = (function() {
+              switch (false) {
+                case !(num >= 40 && num <= 59):
+                  return 'good';
+                case !(num >= 60 && num <= 69):
+                  return 'great';
+                case !(num >= 70):
+                  return 'awesome';
+                default:
+                  return 'average';
+              }
+            })();
+            $(this).find('a').prepend($("<span class=\"quality-indicator " + css_class + "\">" + num + "</span>").hide());
+            return $('.quality-indicator').fadeIn(250);
+          }
         });
       } else {
         return $(".quality-indicator").fadeOut(250, function() {

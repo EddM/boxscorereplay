@@ -188,13 +188,14 @@ $ ->
     if $("#show-game-quality-scores").is ":checked"
       $("li[data-game-quality]").each ->
         num = $(this).data('game-quality')
-        css_class = switch
-          when num >= 40 && num <= 59 then 'good'
-          when num >= 60 && num <= 69 then 'great'
-          when num >= 70 then 'awesome'
-          else 'average'
-        $(this).find('a').prepend $("<span class=\"quality-indicator #{css_class}\">#{num}</span>").hide()
-        $('.quality-indicator').fadeIn 250
+        if num > 0
+          css_class = switch
+            when num >= 40 && num <= 59 then 'good'
+            when num >= 60 && num <= 69 then 'great'
+            when num >= 70 then 'awesome'
+            else 'average'
+          $(this).find('a').prepend $("<span class=\"quality-indicator #{css_class}\">#{num}</span>").hide()
+          $('.quality-indicator').fadeIn 250
     else
       $(".quality-indicator").fadeOut 250, -> $(".quality-indicator").remove()
 
