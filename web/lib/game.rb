@@ -37,9 +37,9 @@ class Game
     @score = 0
     fetch_events
     @score += 50 if overtime?
-    @score += 20 if close_game?
+    @score += 25 if close_game?
     @score += 5 if high_shooting_pct?
-    @score += 15 if very_high_scorer?
+    @score += 10 if very_high_scorer?
     high_scorers_bonus = (high_scorers * 5)
     high_scorers_bonus = 10 if high_scorers_bonus > 10
     @score += high_scorers_bonus
@@ -132,7 +132,7 @@ class Game
   end
 
   def high_scorers
-    players_with_points.values.select { |pts| pts >= 30 }.size
+    players_with_points.values.select { |pts| pts >= 25 }.size
   end
 
   def high_shooting_pct?
