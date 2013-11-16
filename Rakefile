@@ -6,14 +6,16 @@ require 'data_mapper'
 require 'dm-migrations'
 require './lib/config.rb'
 require './lib/parse_task.rb'
-
+require './lib/provider.rb'
+require './lib/providers/nba.rb'
+require './lib/providers/bbref.rb'
 require './web/lib/game.rb'
 require './web/lib/event.rb'
 require './web/lib/player.rb'
 
 task :run do
   config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
-  task = ParseTask.new(config)
+  task = ParseTask.new(config, NBA)
   task.run
 end
 

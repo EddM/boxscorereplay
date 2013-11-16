@@ -8,8 +8,8 @@
 		<tr>
 			<th class="align-left"></th>
 			<th class="value-col pts" title="Points">PTS</th>
-			<th class="value-col or" title="Offensive Rebounds">OR</th>
-			<th class="value-col dr" title="Defensive Rebounds">DR</th>
+			<!-- <th class="value-col or" title="Offensive Rebounds">OR</th> -->
+			<!-- <th class="value-col dr" title="Defensive Rebounds">DR</th> -->
 			<th class="value-col reb" title="Total Rebounds">REB</th>
 			<th class="value-col ast" title="Assists">AST</th>
 			<th class="value-col stl" title="Steals">STL</th>
@@ -31,7 +31,9 @@
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </p>
 
+<% if @game.provider == 'bbref' %>
 <p class="half-width float-left align-right no-margin">View full stats at <a href="http://www.basketball-reference.com/boxscores/<%= @game.bbref_key %>.html">Basketball-Reference</a>.</p>
+<% end %>
 
 <br class="clear" />
 

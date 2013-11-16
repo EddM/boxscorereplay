@@ -5,6 +5,8 @@ class FlatEvent
   def initialize(player, type, time)
     @player, @type, @time = player, type, time
     @player.events << self
+
+    puts "   #{type} by #{player.id}"
   end
 
   def to_s

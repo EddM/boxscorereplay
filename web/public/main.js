@@ -222,8 +222,6 @@ if(g)return a.createDocumentFragment();for(var b=b||i(a),c=b.frag.cloneNode(),d=
         tr = $("<tr class=\"player\"></tr>");
         tr.append("<td class=\"string\">" + player.name + "</td>");
         tr.append("<td class=\"numeric\">" + total_points + "</td>");
-        tr.append("<td class=\"numeric misc\">" + player.oreb + "</td>");
-        tr.append("<td class=\"numeric misc\">" + player.dreb + "</td>");
         tr.append("<td class=\"numeric\">" + total_rebounds + "</td>");
         tr.append("<td class=\"numeric\">" + player.ast + "</td>");
         tr.append("<td class=\"numeric\">" + player.stl + "</td>");
@@ -236,7 +234,7 @@ if(g)return a.createDocumentFragment();for(var b=b||i(a),c=b.frag.cloneNode(),d=
         tbody.append(tr);
       }
       team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>");
-      _ref = ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"];
+      _ref = ["rebs", "asts", "stls", "blks", "pfs", "tos"];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         key = _ref[_i];
         team_tr.append("<td class=\"numeric " + (key === 'orebs' || key === 'drebs' ? "misc" : void 0) + "\">" + team_stats[key] + "</td>");

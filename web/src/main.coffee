@@ -118,8 +118,8 @@ update_table = (time, data) ->
       tr = $("<tr class=\"player\"></tr>")
       tr.append "<td class=\"string\">#{player.name}</td>"
       tr.append "<td class=\"numeric\">#{total_points}</td>"
-      tr.append "<td class=\"numeric misc\">#{player.oreb}</td>"
-      tr.append "<td class=\"numeric misc\">#{player.dreb}</td>"
+      # tr.append "<td class=\"numeric misc\">#{player.oreb}</td>"
+      # tr.append "<td class=\"numeric misc\">#{player.dreb}</td>"
       tr.append "<td class=\"numeric\">#{total_rebounds}</td>"
       tr.append "<td class=\"numeric\">#{player.ast}</td>"
       tr.append "<td class=\"numeric\">#{player.stl}</td>"
@@ -132,7 +132,8 @@ update_table = (time, data) ->
       tbody.append tr
 
     team_tr = $("<tr class=\"team\"><td colspan=\"2\">&nbsp;</td></tr>")
-    for key in ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"]
+    # for key in ["orebs", "drebs", "rebs", "asts", "stls", "blks", "pfs", "tos"]
+    for key in ["rebs", "asts", "stls", "blks", "pfs", "tos"]
       team_tr.append "<td class=\"numeric #{"misc" if key == 'orebs' || key == 'drebs'}\">#{team_stats[key]}</td>"
     team_tr.append shooting_stats_cell team_stats.fgm, team_stats.fga
     team_tr.append shooting_stats_cell team_stats.fgm3, team_stats.fga3

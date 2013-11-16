@@ -46,3 +46,17 @@ migration 3, :add_game_quality do
     end
   end
 end
+
+migration 4, :enable_multiple_providers do
+  up do
+    modify_table :games do
+      add_column :provider, String, default: 'bbref'
+    end
+  end
+
+  down do
+    modify_table :games do
+      drop_column :provider
+    end
+  end  
+end
