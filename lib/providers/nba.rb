@@ -26,7 +26,7 @@ class NBA < Provider
 
   end
 
-  # private ######
+  private
 
   def game_from_url(url)
     @doc = Nokogiri::HTML open(url)

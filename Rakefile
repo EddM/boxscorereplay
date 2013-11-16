@@ -13,10 +13,13 @@ require './web/lib/game.rb'
 require './web/lib/event.rb'
 require './web/lib/player.rb'
 
-task :run do
+# rake run
+# rake run[24] # previous 24-hour offset
+task :run, :offset do |t, args|
+  args.with_defaults :offset => "0"
   config = BSR::Config.new("#{File.dirname __FILE__}/config/database.json")
   task = ParseTask.new(config, NBA)
-  task.run
+  task.run(Time.now - (args.offset.to_i * 60 * 60))
 end
 
 task :assess do
