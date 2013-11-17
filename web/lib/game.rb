@@ -68,8 +68,8 @@ class Game
 
   def fetch_events
     unless @team0_events && @team1_events
-      @team0_events = self.events.all(:team => 0, :unique => true)
-      @team1_events = self.events.all(:team => 1, :unique => true)
+      @team0_events = Event.all(:game_id => self.id, :team => 0, :unique => true)
+      @team1_events = Event.all(:game_id => self.id, :team => 1, :unique => true)
     end
   end
 
