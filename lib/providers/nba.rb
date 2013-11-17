@@ -12,7 +12,7 @@ class NBA < Provider
     games = doc.css('.GameLine')
 
     games.each do |game|
-      if link = game.css('a').select { |a| a.text =~ /complete stats/i }.first
+      if link = game.css('a').select { |a| a.text =~ /recap/i && a.attr('href') =~ /gameinfo\.html/i }.first
         @key = "#{@dateline}_#{link.attr('href').split("/")[3].scan(/.{3}/).join("-")}"
         unless Game.count(:bbref_key => @key) > 0
           game_obj = game_from_url "http://www.nba.com#{link.attr('href')}"
