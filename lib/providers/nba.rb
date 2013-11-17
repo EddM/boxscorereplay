@@ -143,7 +143,7 @@ class NBA < Provider
 
   def player_by_name(name, team)
     name = name.chomp.strip
-    id = player_id_from_name(name)
+    id = player_id_from_name_team(name, team)
 
     if player = @players.flatten.select { |p| p.id == id }[0]
       player
@@ -154,8 +154,8 @@ class NBA < Provider
     end
   end
 
-  def player_id_from_name(name)
-    name.downcase
+  def player_id_from_name_team(name, team)
+    name.downcase + "_#{team}"
   end
 
   def timestamp_to_integer(timestamp, period)
