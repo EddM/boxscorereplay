@@ -124,11 +124,11 @@ class Game
   end
 
   def high_scorer?
-    most_points >= 30
+    most_points.to_i >= 30
   end
 
   def very_high_scorer?
-    most_points >= 40
+    most_points.to_i >= 40
   end
 
   def high_scorers
