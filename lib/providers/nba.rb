@@ -18,7 +18,7 @@ class NBA < Provider
           unless Game.count(:bbref_key => @key) > 0
             game_obj = game_from_url "http://www.nba.com#{link.attr('href')}"
             game_obj.provider = 'nba'
-            game_obj.insert_into_db
+            game_obj = game_obj.insert_into_db
             game_obj.assess!
           end
         end

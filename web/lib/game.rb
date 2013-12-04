@@ -31,6 +31,8 @@ class Game
     @events.each do |event|
       Event.create(:game_id => game.id, :player => event.player.id, :type => event.type, :time => event.time, :name => event.player.name, :team => event.player.team)
     end
+
+    game
   end
 
   def assess!
@@ -44,8 +46,7 @@ class Game
     high_scorers_bonus = 10 if high_scorers_bonus > 10
     @score += high_scorers_bonus
     
-    self.quality = @score
-    self.save
+    self.update(:quality => @score)
   end
 
   def to_json
