@@ -1,7 +1,7 @@
 class NBA < Provider
 
   def run(initial_time = Time.now)
-    @dateline = "#{initial_time.year}#{initial_time.month}#{"%02d" % (initial_time.day - 1)}"
+    @dateline = "#{initial_time.year}#{"%02d" % initial_time.month}#{"%02d" % (initial_time.day - 1)}"
     url = "http://www.nba.com/gameline/#{@dateline}/"
     puts "+ Fetching #{url}"
     doc = Nokogiri::HTML open(url)
