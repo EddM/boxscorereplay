@@ -29,16 +29,22 @@ get '/' do
 
   respond_to do |wants|
     wants.html { erb :index }
-    wants.json { @games.to_json }
   end
 end
 
 get '/games' do
   @games = Game.all(:limit => 50, :order => [:date.desc])
+  @json_data = @games.map do |game|
+    {
+      "home_team" => game.home_team,
+      "away_team" => game.away_team,
+      "slug" => game.slug,
+      "quality" => game.quality
+    }
+  end
 
   respond_to do |wants|
-    wants.html { erb :index }
-    wants.json {  }
+    wants.json { erb :games }
   end
 end
 
@@ -61,7 +67,7 @@ get '/:id' do
 
     respond_to do |wants|
       wants.html { erb :game }
-      wants.json { @game_data }
+      wants.json { erb :game }
     end
   else
     respond_to do |wants|
