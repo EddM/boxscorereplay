@@ -1,4 +1,6 @@
 require 'sinatra'
+require 'sinatra/respond_to'
+
 require 'data_mapper'
 require '../lib/config.rb'
 
@@ -12,6 +14,7 @@ require './lib/player.rb'
 
 DataMapper.finalize
 
+Sinatra::Application.register Sinatra::RespondTo
 enable :sessions
 
 before do
@@ -23,7 +26,20 @@ end
 
 get '/' do
   @games = Game.all(:limit => 50, :order => [:date.desc])
-  erb :index
+
+  respond_to do |wants|
+    wants.html { erb :index }
+    wants.json { @games.to_json }
+  end
+end
+
+get '/games' do
+  @games = Game.all(:limit => 50, :order => [:date.desc])
+
+  respond_to do |wants|
+    wants.html { erb :index }
+    wants.json {  }
+  end
 end
 
 get '/about' do
@@ -42,8 +58,15 @@ get '/:id' do
   if @game = Game.first(:slug => params[:id].downcase)
     @game_data = @game.to_json
     @page_title = "#{@game.away_team} @ #{@game.home_team}, #{@game.date.strftime("%D")}"
-    erb :game
+
+    respond_to do |wants|
+      wants.html { erb :game }
+      wants.json { @game_data }
+    end
   else
-    erb :game_not_found
+    respond_to do |wants|
+      wants.html { erb :game_not_found }
+      wants.json { { :error => "Not found" } }
+    end
   end
 end
