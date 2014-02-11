@@ -33,13 +33,14 @@ get '/' do
 end
 
 get '/games' do
-  @games = Game.all(:limit => 50, :order => [:date.desc])
+  @games = Game.all(:slug.not => nil, :limit => 50, :order => [:date.desc])
   @json_data = @games.map do |game|
     {
       "home_team" => game.home_team,
       "away_team" => game.away_team,
       "slug" => game.slug,
-      "quality" => game.quality
+      "quality" => game.quality,
+      "date" => game.date
     }
   end
 

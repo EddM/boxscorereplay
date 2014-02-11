@@ -1,5 +1,6 @@
 {
   "data" : <%= @game_data %>,
-  "quality" : <%= @game.quality %>,
-  "date" : "<%= @game.date %>" 
+  "quality" : <%= @game.quality || 0 %>,
+  "date" : "<%= @game.date %>",
+  "slug" : "<%= @game.slug %>"
 }
