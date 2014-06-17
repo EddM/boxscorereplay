@@ -7,6 +7,8 @@ html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,abbr,address
 .clear { clear: both; }
 .float-left { float: left; }
 .float-right { float: right; }
+.w80pc { width: 80%; }
+.w75pc { width: 75%; }
 .w70pc { width: 70%; }
 .w65pc { width: 65%; }
 .w50pc, .half-width { width: 50%; }
@@ -255,6 +257,10 @@ a#time {
   .quarter-markers.overtime a.q3 { left: 45%; }
   .quarter-markers.overtime a.q4 { left: 67%; }
   .quarter-markers.overtime a.ot { left: 90%; }
+
+p.notice {
+  color: #00601D;
+}
 
 ul.games {
   width: 700px;
