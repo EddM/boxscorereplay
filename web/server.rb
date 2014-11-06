@@ -1,8 +1,9 @@
 require 'sinatra'
 require 'sinatra/respond_to'
 require 'sinatra/contrib'
-
+require 'coffee-script'
 require 'data_mapper'
+
 require '../lib/config.rb'
 
 config = BSR::Config.new("#{File.dirname __FILE__}/../config/database.json")
@@ -81,4 +82,8 @@ get '/:id' do
       wants.json { { :error => "Not found" } }
     end
   end
+end
+
+get '/main' do
+  coffee :main  
 end
