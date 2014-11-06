@@ -218,11 +218,14 @@ $ ->
   if window.data
     $("#slider").slider
       min: 0, max: 2880, animate: true, range: 'min',
-      slide: ->
-        update_stats
-        tutorial = $(".tutorial")
-        unless tutorial.is(":animated")
-          tutorial.fadeOut 250, -> tutorial.remove()
+      slide: (ev, ui) ->
+        update_stats(ev, ui)
+        unless $(this).data('tutorial-hidden')
+          tutorial = $(".tutorial")
+          unless tutorial.is(":animated")
+            tutorial.fadeOut 250, => 
+              $(this).data('tutorial-hidden', true)
+              tutorial.remove()
       change: update_stats
 
     $("#slider").after $("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>")

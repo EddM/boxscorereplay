@@ -358,14 +358,19 @@ if(g)return a.createDocumentFragment();for(var b=b||i(a),c=b.frag.cloneNode(),d=
         max: 2880,
         animate: true,
         range: 'min',
-        slide: function() {
-          update_stats;
+        slide: function(ev, ui) {
           var tutorial;
-          tutorial = $(".tutorial");
-          if (!tutorial.is(":animated")) {
-            return tutorial.fadeOut(250, function() {
-              return tutorial.remove();
-            });
+          update_stats(ev, ui);
+          if (!$(this).data('tutorial-hidden')) {
+            tutorial = $(".tutorial");
+            if (!tutorial.is(":animated")) {
+              return tutorial.fadeOut(250, (function(_this) {
+                return function() {
+                  $(_this).data('tutorial-hidden', true);
+                  return tutorial.remove();
+                };
+              })(this));
+            }
           }
         },
         change: update_stats
