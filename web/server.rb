@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/respond_to'
+require 'sinatra/contrib'
 
 require 'data_mapper'
 require '../lib/config.rb'
@@ -18,7 +19,7 @@ Sinatra::Application.register Sinatra::RespondTo
 enable :sessions
 
 before do
-  unless params[:uh_huh_show_me_the_bounce_yeah]
+  unless params[:lets_bounce]
     @seen_animation = session[:seen_animation]
     session[:seen_animation] = true
   end
@@ -34,6 +35,7 @@ end
 
 get '/games' do
   @games = Game.all(:slug.not => nil, :limit => 50, :order => [:date.desc])
+
   @json_data = @games.map do |game|
     {
       "home_team" => game.home_team,
@@ -63,6 +65,9 @@ end
 
 get '/:id' do
   if @game = Game.first(:slug => params[:id].downcase)
+    @seen_tutorial = cookies[:seen_tutorial]
+    cookies[:seen_tutorial] = true
+
     @game_data = @game.to_json
     @page_title = "#{@game.away_team} @ #{@game.home_team}, #{@game.date.strftime("%D")}"
 

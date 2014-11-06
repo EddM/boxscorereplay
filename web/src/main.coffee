@@ -186,7 +186,7 @@ update_overtime = (seconds) ->
     $("#slider").slider "option", "max", max + 300
     set_quarter_markers()
 
-update_stats = (ev, ui) -> 
+update_stats = (ev, ui) ->
   seconds = ui.value
   update_overtime seconds if ev.type == "slidechange"
   update_table seconds, window.data
@@ -209,14 +209,20 @@ $ ->
     else
       $(".quality-indicator").fadeOut 250, -> $(".quality-indicator").remove()
 
+  highlight_handle = () ->
+    $("#slider .ui-slider-handle").addClass 'highlighted'
+
   $("#show-game-quality-scores").change toggle_game_quality_indicators
   toggle_game_quality_indicators()
 
   if window.data
-
     $("#slider").slider
       min: 0, max: 2880, animate: true, range: 'min',
-      slide: update_stats
+      slide: ->
+        update_stats
+        tutorial = $(".tutorial")
+        unless tutorial.is(":animated")
+          tutorial.fadeOut 250, -> tutorial.remove()
       change: update_stats
 
     $("#slider").after $("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>")
@@ -224,3 +230,5 @@ $ ->
     $("#slider").slider "option", "value", (if window.location.hash? && window.location.hash != '' then parseInt(window.location.hash.substr(1)) else 0)
     update_table $("#slider").slider("option", "value"), window.data
     set_quarter_markers()
+
+    setTimeout highlight_handle, 300

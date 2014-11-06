@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'sinatra'
 gem 'sinatra-respond_to'
+gem 'sinatra-contrib'
 gem 'rake'
 gem 'nokogiri'
 gem 'data_mapper'

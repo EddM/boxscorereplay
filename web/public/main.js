@@ -318,7 +318,7 @@ if(g)return a.createDocumentFragment();for(var b=b||i(a),c=b.frag.cloneNode(),d=
   };
 
   $(function() {
-    var toggle_game_quality_indicators;
+    var highlight_handle, toggle_game_quality_indicators;
     toggle_game_quality_indicators = function(show) {
       if ($("#show-game-quality-scores").is(":checked")) {
         return $("li[data-game-quality]").each(function() {
@@ -347,6 +347,9 @@ if(g)return a.createDocumentFragment();for(var b=b||i(a),c=b.frag.cloneNode(),d=
         });
       }
     };
+    highlight_handle = function() {
+      return $("#slider .ui-slider-handle").addClass('highlighted');
+    };
     $("#show-game-quality-scores").change(toggle_game_quality_indicators);
     toggle_game_quality_indicators();
     if (window.data) {
@@ -355,14 +358,24 @@ if(g)return a.createDocumentFragment();for(var b=b||i(a),c=b.frag.cloneNode(),d=
         max: 2880,
         animate: true,
         range: 'min',
-        slide: update_stats,
+        slide: function() {
+          update_stats;
+          var tutorial;
+          tutorial = $(".tutorial");
+          if (!tutorial.is(":animated")) {
+            return tutorial.fadeOut(250, function() {
+              return tutorial.remove();
+            });
+          }
+        },
         change: update_stats
       });
       $("#slider").after($("<div class=\"quarter-markers\"><a href=\"#\" class=\"q2\">Q2</a><a class=\"q3\">Q3</a><a class=\"q4\">Q4</a></div>"));
       window.initial_list = create_initial_list(window.data);
       $("#slider").slider("option", "value", ((window.location.hash != null) && window.location.hash !== '' ? parseInt(window.location.hash.substr(1)) : 0));
       update_table($("#slider").slider("option", "value"), window.data);
-      return set_quarter_markers();
+      set_quarter_markers();
+      return setTimeout(highlight_handle, 300);
     }
   });
 

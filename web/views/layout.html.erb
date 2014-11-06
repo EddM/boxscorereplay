@@ -1,9 +1,8 @@
 <html>
   <head>
     <title>Box Score Replay<%= " - #{@page_title}" if @page_title %></title>
-    <script type="text/javascript" src="//use.typekit.net/waz4ava.js"></script>
-    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-    <link rel="stylesheet" href="/styles.css?v=3" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic" type="text/css">
+    <link rel="stylesheet" href="/styles.css?v=3" type="text/css">
 
     <script type="text/javascript" src="/jquery.js"></script>
     <script type="text/javascript" src="/jquery-ui.js"></script>
@@ -25,23 +24,21 @@
 
     </script>
 
-    <header>
-      <h1><a <%= "class=\"animated\"" unless @seen_animation %> href="/">Box Score Replay</a></h1>
-
+    <header class="clearfix">
       <nav>
+        <h1><a <%= 'class="animated"' unless @seen_animation %> href="/">Box Score Replay</a></h1>
+
         <ul>
-          <li <% if !@section || @section == :games %>class="active"<% end %>><a href="/">Games</a></li>
-          <li><a href="https://itunes.apple.com/us/app/box-score-replay/id819619555?ls=1&mt=8" target="_blank">App</a></li>
-          <li <% if @section == :about %>class="active"<% end %>><a href="/about">About</a></li>
+          <li <% if !@section || @section == :games %>class="active"<% end %>><a href="/"><span>Games</span></a></li>
+          <li><a href="https://itunes.apple.com/us/app/box-score-replay/id819619555?ls=1&mt=8" target="_blank"><span>App</span></a></li>
+          <li <% if @section == :about %>class="active"<% end %>><a href="/about"><span>About</span></a></li>
         </ul>
       </nav>
 
       <br class="clear" />
     </header>
 
-    <section>
-      <%= yield %>
-    </section>
+    <%= yield %>
 
     <footer>
       <p class="smaller align-right">
