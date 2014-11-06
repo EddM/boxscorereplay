@@ -64,6 +64,10 @@ get '/about/update-2013' do
   erb :update_2013
 end
 
+get '/assets/main' do
+  coffee :main
+end
+
 get '/:id' do
   if @game = Game.first(:slug => params[:id].downcase)
     @seen_tutorial = cookies[:seen_tutorial]
@@ -82,8 +86,4 @@ get '/:id' do
       wants.json { { :error => "Not found" } }
     end
   end
-end
-
-get '/main' do
-  coffee :main  
 end
